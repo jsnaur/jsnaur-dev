@@ -1,1 +1,140 @@
 @import "tailwindcss";
+
+@theme {
+  /* Surfaces — soft dark, never #000 */
+  --color-ink-950: #0e1525;
+  --color-ink-900: #131b2e;
+  --color-ink-800: #1a2338;
+  --color-ink-700: #232d47;
+  --color-ink-600: #364060;
+
+  /* Navy — structural accent */
+  --color-navy-600: #243d70;
+  --color-navy-500: #2c4a8a;
+  --color-navy-400: #3d63b8;
+  --color-navy-300: #6b8dd6;
+  --color-navy-200: #a8bee5;
+
+  /* Brass — the warm "verdict" highlight (used sparingly) */
+  --color-brass-400: #c9a96e;
+  --color-brass-300: #e0c48e;
+
+  /* Paper — text colors */
+  --color-paper-50: #f2f4f8;
+  --color-paper-200: #c9d1e0;
+  --color-paper-400: #8593ae;
+  --color-paper-600: #5a6680;
+
+  /* Semantic */
+  --color-verdict: #4fb286;
+  --color-flag: #d97570;
+
+  /* Typography */
+  --font-display: var(--font-fraunces), ui-serif, Georgia, serif;
+  --font-sans: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
+  --font-mono: var(--font-jetbrains-mono), ui-monospace, "SFMono-Regular", monospace;
+}
+
+html,
+body {
+  background-color: var(--color-ink-950);
+  color: var(--color-paper-50);
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Selection */
+::selection {
+  background: var(--color-navy-500);
+  color: var(--color-paper-50);
+}
+
+/* Custom scrollbar (subtle, navy on ink) */
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+::-webkit-scrollbar-track {
+  background: var(--color-ink-950);
+}
+::-webkit-scrollbar-thumb {
+  background: var(--color-ink-700);
+  border-radius: 8px;
+  border: 2px solid var(--color-ink-950);
+}
+::-webkit-scrollbar-thumb:hover {
+  background: var(--color-navy-600);
+}
+
+/* Smooth scroll for anchor jumps */
+html {
+  scroll-behavior: smooth;
+}
+
+/* Column-rule grid background utility */
+.bg-columnrule {
+  background-image:
+    linear-gradient(to right, rgba(108, 141, 214, 0.05) 1px, transparent 1px);
+  background-size: 96px 100%;
+}
+
+/* Hairline border */
+.border-hairline {
+  border-width: 1px;
+}
+
+/* Brass corner tick */
+.corner-tick::before,
+.corner-tick::after {
+  content: "";
+  position: absolute;
+  width: 14px;
+  height: 14px;
+  border-color: var(--color-brass-400);
+  border-style: solid;
+}
+.corner-tick::before {
+  top: -1px;
+  right: -1px;
+  border-width: 1px 1px 0 0;
+}
+
+/* CSS-driven entrance animations (SSR-safe — no framer hydration mismatch) */
+@keyframes fade-up {
+  from { opacity: 0; transform: translateY(20px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+@keyframes fade-in {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+@keyframes draw-x {
+  from { transform: scaleX(0); }
+  to   { transform: scaleX(1); }
+}
+@keyframes glow-drift {
+  0%, 100% { transform: translate(-50%, -50%) translate3d(0, 0, 0); }
+  33%      { transform: translate(-50%, -50%) translate3d(40px, -20px, 0); }
+  66%      { transform: translate(-50%, -50%) translate3d(-20px, 30px, 0); }
+}
+
+.anim-fade-up { animation: fade-up 0.85s cubic-bezier(0.22, 1, 0.36, 1) both; }
+.anim-fade-in { animation: fade-in 0.7s ease-out both; }
+.anim-draw-x  { animation: draw-x 0.9s cubic-bezier(0.65, 0, 0.35, 1) both; transform-origin: left; }
+.anim-glow    { animation: glow-drift 24s ease-in-out infinite; }
+
+/* Sections offset so anchor jumps clear the header chrome */
+section[id] { scroll-margin-top: 2rem; }
+
+/* Reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
