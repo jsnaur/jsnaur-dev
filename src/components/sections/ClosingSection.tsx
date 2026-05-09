@@ -65,7 +65,7 @@ export function ClosingSection() {
   return (
     <section
       id="closing"
-      className="relative px-6 py-32 sm:px-10 lg:px-32"
+      className="relative px-6 py-24 sm:px-10 sm:py-32 lg:px-32"
     >
       <div className="mx-auto flex max-w-4xl flex-col items-center text-center">
         <Reveal>

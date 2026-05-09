@@ -124,6 +124,66 @@ html {
 .anim-draw-x  { animation: draw-x 0.9s cubic-bezier(0.65, 0, 0.35, 1) both; transform-origin: left; }
 .anim-glow    { animation: glow-drift 24s ease-in-out infinite; }
 
+/* Identification scan effect — a brass beam sweeps the portrait on load,
+   repeats subtly afterward, while the image flickers like a CRT during analysis. */
+@keyframes scan-sweep {
+  0%   { transform: translateY(-100%); opacity: 0; }
+  8%   { opacity: 1; }
+  92%  { opacity: 1; }
+  100% { transform: translateY(100%); opacity: 0; }
+}
+@keyframes scan-loop {
+  0%, 100% { transform: translateY(-10%); opacity: 0; }
+  10%      { opacity: 0.6; }
+  50%      { transform: translateY(110%); opacity: 0.6; }
+  60%      { opacity: 0; }
+}
+@keyframes id-flicker {
+  0%, 100% { filter: brightness(1) contrast(1); }
+  6%       { filter: brightness(1.35) contrast(1.1); }
+  8%       { filter: brightness(0.85) contrast(1.2); }
+  10%      { filter: brightness(1.2) contrast(1); }
+  12%      { filter: brightness(1) contrast(1); }
+  40%      { filter: brightness(1.05) contrast(1.05); }
+  42%      { filter: brightness(0.95) contrast(1); }
+}
+@keyframes badge-pop {
+  0%   { opacity: 0; transform: scale(0.85); }
+  60%  { opacity: 0; transform: scale(0.85); }
+  75%  { opacity: 1; transform: scale(1.06); }
+  100% { opacity: 1; transform: scale(1); }
+}
+@keyframes badge-pulse {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(79, 178, 134, 0.0); }
+  50%      { box-shadow: 0 0 0 4px rgba(79, 178, 134, 0.18); }
+}
+@keyframes scanlines-shift {
+  from { background-position: 0 0; }
+  to   { background-position: 0 6px; }
+}
+
+.anim-scan-sweep    { animation: scan-sweep 2.4s cubic-bezier(0.65, 0, 0.35, 1) both; }
+.anim-scan-loop     { animation: scan-loop 6s ease-in-out 2.6s infinite both; }
+.anim-id-flicker    { animation: id-flicker 2.4s steps(24, end) both; }
+.anim-badge-pop     { animation: badge-pop 2.8s cubic-bezier(0.22, 1, 0.36, 1) both, badge-pulse 2.4s ease-in-out 3s infinite; }
+.anim-scanlines     { animation: scanlines-shift 0.3s steps(2) infinite; }
+
+/* Horizontal CRT scanline texture */
+.scanline-overlay {
+  background-image: repeating-linear-gradient(
+    to bottom,
+    rgba(255, 255, 255, 0.03) 0px,
+    rgba(255, 255, 255, 0.03) 1px,
+    transparent 1px,
+    transparent 3px
+  );
+}
+
+/* Magnetic / tilt — already used elsewhere, additive cursor highlight */
+.cursor-glow:hover {
+  box-shadow: 0 0 0 1px rgba(201, 169, 110, 0.35), 0 25px 60px -20px rgba(201, 169, 110, 0.25);
+}
+
 /* Sections offset so anchor jumps clear the header chrome */
 section[id] { scroll-margin-top: 2rem; }
 

@@ -80,7 +80,7 @@ function FannedHand({ srcs, onOpen }: { srcs: string[]; onOpen: (s: Shot) => voi
   const xs = [-150, -78, 0, 78, 150];
   const ys = [60, 18, 0, 18, 60];
   return (
-    <div className="relative mx-auto h-[480px] w-full max-w-[560px]">
+    <div className="relative mx-auto h-[420px] w-full max-w-[560px] overflow-hidden sm:h-[480px] sm:overflow-visible">
       {srcs.slice(0, 5).map((s, i) => (
         <button
           key={s}
@@ -216,7 +216,7 @@ export function ExhibitDiptych() {
   return (
     <section
       id="exhibits-bc"
-      className="relative border-b border-ink-700 px-6 py-28 sm:px-10 lg:px-32"
+      className="relative border-b border-ink-700 px-6 py-20 sm:px-10 sm:py-28 lg:px-32"
     >
       <div className="mx-auto max-w-7xl">
         <Reveal>

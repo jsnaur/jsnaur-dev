@@ -107,7 +107,7 @@ export function MethodologySection() {
   return (
     <section
       id="methodology"
-      className="relative border-b border-ink-700 px-6 py-28 sm:px-10 lg:px-32"
+      className="relative border-b border-ink-700 px-6 py-20 sm:px-10 sm:py-28 lg:px-32"
     >
       <div className="mx-auto max-w-7xl">
         <Reveal>
