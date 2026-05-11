@@ -115,13 +115,14 @@ function ScrollableLanding({ src, alt }: { src: string; alt: string }) {
 function RAGDiagram() {
   const ref = useRef<SVGSVGElement>(null);
   const inView = useInView(ref, { once: true, margin: "-15%" });
-  const nodes = [
-    "User Query",
-    "Embed (Gemini)",
-    "Vector Search (pgvector)",
-    "Context Inject",
-    "LLM Response",
-    "Rate Limit (10/min)",
+  // Each node is one or two lines so longer labels never overflow the 140px box.
+  const nodes: [string, string?][] = [
+    ["User Query"],
+    ["Embed", "(Gemini)"],
+    ["Vector Search", "(pgvector)"],
+    ["Context Inject"],
+    ["LLM Response"],
+    ["Rate Limit", "(10/min)"],
   ];
 
   return (
@@ -140,10 +141,12 @@ function RAGDiagram() {
           className="min-w-[860px] w-full"
           aria-label="RAG architecture flow"
         >
-          {nodes.map((label, i) => {
+          {nodes.map(([line1, line2], i) => {
             const x = 30 + i * 156;
+            // Vertical centering: single-line at y=75; two-line at y=68 / 82.
+            const singleY = 75;
             return (
-              <g key={label}>
+              <g key={line1}>
                 <motion.rect
                   x={x}
                   y={50}
@@ -159,7 +162,7 @@ function RAGDiagram() {
                 />
                 <motion.text
                   x={x + 70}
-                  y={75}
+                  y={line2 ? 68 : singleY}
                   fontSize={11}
                   fill="#c9d1e0"
                   textAnchor="middle"
@@ -168,7 +171,12 @@ function RAGDiagram() {
                   animate={inView ? { opacity: 1 } : {}}
                   transition={{ duration: 0.4, delay: 0.15 * i + 0.1 }}
                 >
-                  {label}
+                  <tspan x={x + 70}>{line1}</tspan>
+                  {line2 && (
+                    <tspan x={x + 70} dy={13} fill="#8593ae">
+                      {line2}
+                    </tspan>
+                  )}
                 </motion.text>
                 {i < nodes.length - 1 && (
                   <motion.line
