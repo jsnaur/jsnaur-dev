@@ -69,10 +69,10 @@ export const gesturix = {
   ],
   screens: [
     "/projects/gesturix/WelcomeScreen.png",
+    "/projects/gesturix/TranslateScreen.png",
+    "/projects/gesturix/LearnScreen.png",
     "/projects/gesturix/Pre-QuizScreen.png",
     "/projects/gesturix/MainQuizScreen.png",
-    "/projects/gesturix/LearnScreen.png",
-    "/projects/gesturix/TranslateScreen.png",
   ],
 } as const;
 
