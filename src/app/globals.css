@@ -187,6 +187,53 @@ html {
 /* Sections offset so anchor jumps clear the header chrome */
 section[id] { scroll-margin-top: 2rem; }
 
+/* Mockup floating system — transparent-PNG phone mockups drift gently in place.
+   Three offset rhythms so a stack of phones never breathes in sync. */
+@keyframes mockup-float-a {
+  0%, 100% { transform: translate3d(0, 0, 0); }
+  50%      { transform: translate3d(0, -10px, 0); }
+}
+@keyframes mockup-float-b {
+  0%, 100% { transform: translate3d(0, -4px, 0); }
+  50%      { transform: translate3d(0, 8px, 0); }
+}
+@keyframes mockup-float-c {
+  0%, 100% { transform: translate3d(0, 6px, 0); }
+  50%      { transform: translate3d(0, -6px, 0); }
+}
+.anim-float-a { animation: mockup-float-a 7s cubic-bezier(0.45, 0, 0.55, 1) infinite; }
+.anim-float-b { animation: mockup-float-b 9s cubic-bezier(0.45, 0, 0.55, 1) infinite; }
+.anim-float-c { animation: mockup-float-c 11s cubic-bezier(0.45, 0, 0.55, 1) infinite; }
+
+/* Brass underline draw — section-level cursor sweep */
+@keyframes underline-draw {
+  from { transform: scaleX(0); }
+  to   { transform: scaleX(1); }
+}
+.anim-underline-draw {
+  animation: underline-draw 1.1s cubic-bezier(0.65, 0, 0.35, 1) both;
+  transform-origin: left;
+}
+
+/* Soft glow drop pulse — emphasis for case-numbers / verdict-style elements */
+@keyframes glow-pulse {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(201, 169, 110, 0); }
+  50%      { box-shadow: 0 0 0 6px rgba(201, 169, 110, 0.08); }
+}
+.anim-glow-pulse { animation: glow-pulse 4.5s ease-in-out infinite; }
+
+/* Soft pedestal — radial ground-shadow under a floating mockup.
+   Place inside the same wrapper as the mockup, absolutely positioned at the base. */
+.mockup-pedestal {
+  background: radial-gradient(
+    ellipse at center,
+    rgba(13, 21, 46, 0.55) 0%,
+    rgba(13, 21, 46, 0.25) 35%,
+    transparent 70%
+  );
+  filter: blur(8px);
+}
+
 /* Reduced motion */
 @media (prefers-reduced-motion: reduce) {
   *,

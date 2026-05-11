@@ -1,12 +1,12 @@
 "use client";
 
-import Image from "next/image";
 import { useState } from "react";
 import { campusee } from "@/data/portfolio";
 import { SectionHeading } from "@/components/ui/SectionHeading";
 import { MonoLabel } from "@/components/ui/MonoLabel";
 import { Reveal } from "@/components/ui/Reveal";
 import { Lightbox } from "@/components/ui/Lightbox";
+import { TransparentMockup } from "@/components/ui/TransparentMockup";
 
 export function ArchiveSection() {
   const [open, setOpen] = useState<{ src: string; alt: string } | null>(null);
@@ -71,30 +71,32 @@ export function ArchiveSection() {
 
                 <div className="lg:col-span-7">
                   <MonoLabel className="text-navy-300">filmstrip</MonoLabel>
-                  <div className="mt-4 grid grid-cols-2 gap-3 sm:grid-cols-4">
-                    {campusee.screens.map((s, i) => (
-                      <button
-                        key={s}
-                        onClick={() =>
-                          setOpen({ src: s, alt: `CampuSee screen ${i + 1}` })
-                        }
-                        className="group relative overflow-hidden rounded-lg border border-ink-700 bg-ink-900 transition-colors hover:border-navy-400/70"
-                      >
-                        <Image
-                          src={s}
-                          alt={`CampuSee screen ${i + 1}`}
-                          width={300}
-                          height={650}
-                          className="h-auto w-full"
-                          sizes="(max-width: 640px) 50vw, 220px"
-                        />
-                        <div className="pointer-events-none absolute inset-x-0 bottom-0 bg-gradient-to-t from-ink-950/90 to-transparent p-2">
-                          <span className="font-mono text-[9px] uppercase tracking-wider text-paper-400 group-hover:text-brass-400">
-                            frame.{String(i + 1).padStart(2, "0")} ↗
+                  <div className="mt-6 flex flex-wrap justify-center gap-6 sm:justify-start sm:gap-4">
+                    {campusee.screens.map((s, i) => {
+                      const rhythms: ("a" | "b" | "c")[] = ["a", "b", "c", "a"];
+                      const rotations = [-4, -1, 2, 5];
+                      return (
+                        <div key={s} className="flex flex-col items-center">
+                          <TransparentMockup
+                            src={s}
+                            alt={`CampuSee screen ${i + 1}`}
+                            width={140}
+                            rotate={rotations[i]}
+                            rhythm={rhythms[i]}
+                            enterFrom={i < 2 ? "left" : "right"}
+                            delayIndex={i}
+                            tone="neutral"
+                            onClick={() =>
+                              setOpen({ src: s, alt: `CampuSee screen ${i + 1}` })
+                            }
+                            ariaLabel={`View CampuSee screen ${i + 1}`}
+                          />
+                          <span className="mt-4 font-mono text-[9px] uppercase tracking-wider text-paper-600">
+                            frame.{String(i + 1).padStart(2, "0")}
                           </span>
                         </div>
-                      </button>
-                    ))}
+                      );
+                    })}
                   </div>
                 </div>
               </div>

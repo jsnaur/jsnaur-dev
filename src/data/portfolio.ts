@@ -28,12 +28,13 @@ export const taracse = {
   caseNo: "2026-0001",
   tagline: "AI-integrated Civil Service Exam preparation platform.",
   stack: ["Next.js", "TypeScript", "Supabase", "Gemini", "pgvector", "Tailwind"],
-  role: "Project Manager & Full-Stack Developer",
+  role: "Personal ongoing project — Project Manager",
   period: "April 2026 — Present",
   github: "https://github.com/jsnaur/taracse",
   highlights: [
-    "Architected a Next.js + Supabase platform with TypeScript end-to-end.",
-    "Engineered a custom RAG pipeline using Gemini embeddings + pgvector similarity search.",
+    "Solo-architected a Next.js + Supabase platform with TypeScript end-to-end.",
+    "Personally engineered a custom RAG pipeline using Gemini embeddings + pgvector similarity search.",
+    "Self-managed scope, roadmap, and shipping cadence — every commit authored solo.",
     "Hardened AI endpoints with in-memory rate limiting (10 req/min/user) for stability.",
   ],
   desktop: {

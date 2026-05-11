@@ -2,12 +2,12 @@
 
 import Image from "next/image";
 import { useEffect, useRef, useState } from "react";
-import { motion, useInView, useScroll, useTransform } from "framer-motion";
+import { motion, useInView } from "framer-motion";
 import { taracse } from "@/data/portfolio";
 import { SectionHeading } from "@/components/ui/SectionHeading";
 import { CaseCard } from "@/components/ui/CaseCard";
 import { BrowserFrame } from "@/components/ui/BrowserFrame";
-import { PhoneFrame } from "@/components/ui/PhoneFrame";
+import { MockupCarousel } from "@/components/ui/MockupCarousel";
 import { Reveal } from "@/components/ui/Reveal";
 import { MonoLabel } from "@/components/ui/MonoLabel";
 import { Lightbox } from "@/components/ui/Lightbox";
@@ -110,66 +110,6 @@ function ScrollableLanding({ src, alt }: { src: string; alt: string }) {
   );
 }
 
-/* Mobile mockup staircase — clickable, scroll-parallax */
-function MobileStack({
-  srcs,
-  onOpen,
-}: {
-  srcs: { src: string; alt: string }[];
-  onOpen: (s: { src: string; alt: string }) => void;
-}) {
-  const ref = useRef<HTMLDivElement>(null);
-  const { scrollYProgress } = useScroll({
-    target: ref,
-    offset: ["start end", "end start"],
-  });
-  // Subtle scroll parallax — each phone drifts a different amount
-  const y1 = useTransform(scrollYProgress, [0, 1], [40, -40]);
-  const y2 = useTransform(scrollYProgress, [0, 1], [20, -20]);
-  const y3 = useTransform(scrollYProgress, [0, 1], [0, 0]);
-  const ys = [y1, y2, y3];
-
-  // Staircase spread: top-right → bottom-left
-  const layout = [
-    { x: 90, y: 0, rot: 8 },
-    { x: 30, y: 60, rot: 2 },
-    { x: -30, y: 120, rot: -6 },
-  ];
-
-  return (
-    <div
-      ref={ref}
-      className="relative mx-auto h-[560px] w-full max-w-[420px] [perspective:1400px]"
-    >
-      {srcs.slice(0, 3).map((s, i) => {
-        const l = layout[i];
-        return (
-          <motion.button
-            key={s.src}
-            type="button"
-            onClick={() => onOpen(s)}
-            aria-label={`View ${s.alt}`}
-            style={{ y: ys[i], zIndex: 10 + i }}
-            className="group absolute left-1/2 top-0 -translate-x-1/2 transition-transform duration-[450ms] ease-out hover:z-50 focus:z-50 focus:outline-none"
-          >
-            <span
-              className="block transition-transform duration-300 ease-out group-hover:-translate-y-3 group-hover:scale-[1.04] group-focus-visible:-translate-y-3"
-              style={{
-                transform: `translate(${l.x}px, ${l.y}px) rotate(${l.rot}deg)`,
-              }}
-            >
-              <PhoneFrame
-                src={s.src}
-                alt={s.alt}
-                className="w-[200px] ring-1 ring-ink-700/60 transition-shadow duration-300 group-hover:ring-brass-400/60 group-hover:shadow-[0_30px_80px_-20px_rgba(201,169,110,0.25)]"
-              />
-            </span>
-          </motion.button>
-        );
-      })}
-    </div>
-  );
-}
 
 /* RAG architecture diagram */
 function RAGDiagram() {
@@ -293,7 +233,7 @@ export function ExhibitTaraCSE() {
             num="02"
             eyebrow="Exhibit A"
             title="TaraCSE — the flagship case."
-            caption={`${taracse.tagline} · ${taracse.role} · ${taracse.period}`}
+            caption={`${taracse.tagline} · ${taracse.role} · solo build · ${taracse.period}`}
           />
         </Reveal>
 
@@ -303,7 +243,7 @@ export function ExhibitTaraCSE() {
             <div className="lg:col-span-8">
               <ScrollableLanding src={taracse.desktop.landing} alt="TaraCSE landing page" />
               <p className="mt-3 font-mono text-[10px] uppercase tracking-[0.18em] text-paper-600">
-                hover to take control · auto-previews when idle · click "view full" to inspect
+                hover to take control · auto-previews when idle · click &quot;view full&quot; to inspect
               </p>
             </div>
             <div className="lg:col-span-4">
@@ -405,17 +345,19 @@ export function ExhibitTaraCSE() {
               </div>
             </div>
             <div className="lg:col-span-5">
-              <MobileStack
-                onOpen={setOpenImg}
-                srcs={[
+              <MockupCarousel
+                width={210}
+                tone="brass"
+                ariaLabel="TaraCSE mobile screens"
+                onSlideClick={setOpenImg}
+                slides={[
                   { src: taracse.mobile.landing, alt: "TaraCSE mobile — landing" },
                   { src: taracse.mobile.dashboard, alt: "TaraCSE mobile — dashboard" },
                   { src: taracse.mobile.practice, alt: "TaraCSE mobile — practice" },
+                  { src: taracse.mobile.mock, alt: "TaraCSE mobile — mock exam" },
+                  { src: taracse.mobile.analytics, alt: "TaraCSE mobile — analytics" },
                 ]}
               />
-              <p className="mt-4 text-center font-mono text-[10px] uppercase tracking-[0.18em] text-paper-600">
-                tap any phone to view full
-              </p>
             </div>
           </div>
         </Reveal>

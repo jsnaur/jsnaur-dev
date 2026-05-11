@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import { useReducedMotion } from "framer-motion";
 import { gesturix, lynk } from "@/data/portfolio";
 import { SectionHeading } from "@/components/ui/SectionHeading";
-import { PhoneFrame } from "@/components/ui/PhoneFrame";
+import { MockupCarousel } from "@/components/ui/MockupCarousel";
 import { MonoLabel } from "@/components/ui/MonoLabel";
 import { Reveal } from "@/components/ui/Reveal";
 import { Lightbox } from "@/components/ui/Lightbox";
@@ -74,70 +74,6 @@ function LynkPanel() {
   );
 }
 
-function FannedHand({ srcs, onOpen }: { srcs: string[]; onOpen: (s: Shot) => void }) {
-  // 5 phones fanning out — wide rotation + explicit X spread so each is fully visible
-  const angles = [-22, -11, 0, 11, 22];
-  const xs = [-150, -78, 0, 78, 150];
-  const ys = [60, 18, 0, 18, 60];
-  return (
-    <div className="relative mx-auto h-[420px] w-full max-w-[560px] overflow-hidden sm:h-[480px] sm:overflow-visible">
-      {srcs.slice(0, 5).map((s, i) => (
-        <button
-          key={s}
-          type="button"
-          onClick={() => onOpen({ src: s, alt: `GesturiX screen ${i + 1}` })}
-          aria-label={`View GesturiX screen ${i + 1}`}
-          className="group absolute left-1/2 top-4 transition-transform duration-[450ms] ease-out hover:z-50 focus:z-50 focus:outline-none"
-          style={{
-            transform: `translate(calc(-50% + ${xs[i]}px), ${ys[i]}px) rotate(${angles[i]}deg)`,
-            zIndex: 10 - Math.abs(i - 2),
-          }}
-        >
-          <span className="block transition-transform duration-300 ease-out group-hover:-translate-y-4 group-hover:scale-[1.06] group-focus-visible:-translate-y-4">
-            <PhoneFrame
-              src={s}
-              alt={`GesturiX screen ${i + 1}`}
-              className="w-[170px] ring-1 ring-ink-700/60 transition-shadow duration-300 group-hover:ring-brass-400/60 group-hover:shadow-[0_30px_80px_-20px_rgba(201,169,110,0.25)]"
-            />
-          </span>
-        </button>
-      ))}
-    </div>
-  );
-}
-
-function IsoStack({ srcs, onOpen }: { srcs: string[]; onOpen: (s: Shot) => void }) {
-  const top = srcs.slice(0, 3);
-  // Cleaner staircase: each card stepped down + offset right, with slight perspective
-  return (
-    <div className="relative mx-auto h-[520px] w-full max-w-[440px] [perspective:1600px]">
-      {top.map((s, i) => (
-        <button
-          key={s}
-          type="button"
-          onClick={() => onOpen({ src: s, alt: `LYNK screen ${i + 1}` })}
-          aria-label={`View LYNK screen ${i + 1}`}
-          className="group absolute transition-transform duration-[450ms] ease-out hover:z-50 focus:z-50 focus:outline-none"
-          style={{
-            top: `${i * 70}px`,
-            left: `${i * 36}px`,
-            transform: `rotateY(${-14 + i * 1}deg) rotateX(6deg) translateZ(${-i * 16}px)`,
-            transformOrigin: "right center",
-            zIndex: 10 - i,
-          }}
-        >
-          <span className="block transition-transform duration-300 ease-out group-hover:-translate-y-3 group-hover:[transform:rotateY(-6deg)] group-focus-visible:-translate-y-3">
-            <PhoneFrame
-              src={s}
-              alt={`LYNK screen ${i + 1}`}
-              className="w-[200px] ring-1 ring-ink-700/60 transition-shadow duration-300 group-hover:ring-navy-300/70 group-hover:shadow-[0_30px_80px_-20px_rgba(107,141,214,0.3)]"
-            />
-          </span>
-        </button>
-      ))}
-    </div>
-  );
-}
 
 function ProjectColumn({
   caseNo,
@@ -249,8 +185,17 @@ export function ExhibitDiptych() {
               period={gesturix.period}
               visual={
                 <div className="relative">
-                  <FannedHand srcs={gesturix.screens.slice(0, 5)} onOpen={setOpen} />
-                  <div className="absolute -bottom-2 left-1/2 -translate-x-1/2">
+                  <MockupCarousel
+                    width={190}
+                    tone="brass"
+                    ariaLabel="GesturiX screens"
+                    onSlideClick={setOpen}
+                    slides={gesturix.screens.slice(0, 5).map((src, i) => ({
+                      src,
+                      alt: `GesturiX screen ${i + 1}`,
+                    }))}
+                  />
+                  <div className="mt-4 flex justify-center">
                     <GesturiXPanel />
                   </div>
                 </div>
@@ -270,8 +215,17 @@ export function ExhibitDiptych() {
               period={lynk.period}
               visual={
                 <div className="relative">
-                  <IsoStack srcs={lynk.screens.slice(2, 5)} onOpen={setOpen} />
-                  <div className="absolute -bottom-2 left-0 right-0 mx-auto max-w-[280px]">
+                  <MockupCarousel
+                    width={210}
+                    tone="navy"
+                    ariaLabel="LYNK screens"
+                    onSlideClick={setOpen}
+                    slides={lynk.screens.map((src, i) => ({
+                      src,
+                      alt: `LYNK screen ${i + 1}`,
+                    }))}
+                  />
+                  <div className="mt-4 mx-auto max-w-[280px]">
                     <LynkPanel />
                   </div>
                 </div>

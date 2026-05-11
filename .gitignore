@@ -51,3 +51,5 @@ next-env.d.ts
 node_modules/
 .env*
 .DS_Store
+CLAUDE.md
+AGENTS.md
