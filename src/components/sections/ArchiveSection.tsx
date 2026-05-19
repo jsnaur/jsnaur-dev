@@ -174,7 +174,8 @@ export function ArchiveSection() {
                           src={artifact.src}
                           alt={artifact.alt}
                           fill
-                          className="object-cover object-top transition-transform duration-700 ease-out group-hover:scale-[1.03]"
+                          className="object-cover transition-transform duration-700 ease-out group-hover:scale-[1.03]"
+                          style={{ objectPosition: artifact.objectPosition }}
                           sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
                         />
                       </div>
