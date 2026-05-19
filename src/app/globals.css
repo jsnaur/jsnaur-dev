@@ -241,6 +241,12 @@ section[id] { scroll-margin-top: 2rem; }
 }
 .anim-marquee { animation: marquee 28s linear infinite; }
 
+/* Tech ticker strip — scroll full width (triplicated content) */
+@keyframes ticker-scroll {
+  from { transform: translateX(0); }
+  to   { transform: translateX(-33.333%); }
+}
+
 /* Floating ambient orbs */
 @keyframes orb-a {
   0%, 100% { transform: translate(0, 0) scale(1); opacity: 0.12; }
