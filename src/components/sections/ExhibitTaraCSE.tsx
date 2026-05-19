@@ -17,6 +17,7 @@ import { MockupCarousel } from "@/components/ui/MockupCarousel";
 import { Reveal } from "@/components/ui/Reveal";
 import { MonoLabel } from "@/components/ui/MonoLabel";
 import { Lightbox } from "@/components/ui/Lightbox";
+import { StackBadges } from "@/components/ui/StackBadges";
 
 /* Auto-scrolling browser preview with manual takeover */
 function ScrollableLanding({ src, alt }: { src: string; alt: string }) {
@@ -335,7 +336,13 @@ export function ExhibitTaraCSE() {
           <SectionHeading
             num="02"
             eyebrow="Exhibit A"
-            title="TaraCSE — the flagship case."
+            titleNode={
+              <>
+                <span style={{ color: "#6b8dd6" }}>Tara</span>
+                <span style={{ color: "#c9a96e" }}>CSE</span>
+                <span className="text-paper-50"> — the flagship case.</span>
+              </>
+            }
             caption={`${taracse.tagline} · ${taracse.role} · solo build · ${taracse.period}`}
           />
         </Reveal>
@@ -366,15 +373,8 @@ export function ExhibitTaraCSE() {
                       </li>
                     ))}
                   </ul>
-                  <div className="flex flex-wrap gap-1.5 border-t border-ink-700 pt-4">
-                    {taracse.stack.map((t) => (
-                      <span
-                        key={t}
-                        className="rounded border border-ink-700 px-2 py-0.5 font-mono text-[10px] text-paper-400"
-                      >
-                        {t}
-                      </span>
-                    ))}
+                  <div className="border-t border-ink-700 pt-4">
+                    <StackBadges stack={taracse.stack} speed={22} />
                   </div>
                   <a
                     href={taracse.github}
