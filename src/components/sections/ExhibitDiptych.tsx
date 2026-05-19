@@ -22,12 +22,15 @@ const ASL_PREDICTIONS = [
 function GesturiXPanel() {
   const reduced = useReducedMotion();
   const [idx, setIdx] = useState(0);
+  
   useEffect(() => {
     if (reduced) return;
-    const t = setInterval(() => setIdx((i) => (i + 1) % ASL_PREDICTIONS.length), 1400);
+    const t = setInterval(() => setIdx((i) => (i + 1) % ASL_PREDICTIONS.length), 1200);
     return () => clearInterval(t);
   }, [reduced]);
+  
   const cur = ASL_PREDICTIONS[idx];
+  
   return (
     <div className="rounded-md border border-ink-700 bg-ink-950/85 px-3 py-2 backdrop-blur">
       <div className="flex items-center gap-2">
@@ -47,17 +50,20 @@ function GesturiXPanel() {
 function LynkPanel() {
   const reduced = useReducedMotion();
   const [pulse, setPulse] = useState(0);
+  
   useEffect(() => {
     if (reduced) return;
-    const t = setInterval(() => setPulse((p) => (p + 1) % 3), 1500);
+    const t = setInterval(() => setPulse((p) => (p + 1) % 3), 1200);
     return () => clearInterval(t);
   }, [reduced]);
+  
   const states = [
     { label: "POST /moderate", status: "200ms · ✓ approved" },
     { label: "POST /moderate", status: "184ms · ✓ approved" },
     { label: "POST /moderate", status: "412ms · ⚑ flagged" },
   ];
   const cur = states[pulse];
+  
   return (
     <div className="rounded-md border border-ink-700 bg-ink-950/85 px-3 py-2 backdrop-blur">
       <div className="flex items-center gap-2">
@@ -73,7 +79,6 @@ function LynkPanel() {
     </div>
   );
 }
-
 
 function ProjectColumn({
   caseNo,
@@ -188,6 +193,7 @@ export function ExhibitDiptych() {
                   <MockupCarousel
                     width={190}
                     tone="brass"
+                    autoMs={1500}
                     ariaLabel="GesturiX screens"
                     onSlideClick={setOpen}
                     slides={gesturix.screens.slice(0, 5).map((src, i) => ({
@@ -218,6 +224,7 @@ export function ExhibitDiptych() {
                   <MockupCarousel
                     width={210}
                     tone="navy"
+                    autoMs={1500}
                     ariaLabel="LYNK screens"
                     onSlideClick={setOpen}
                     slides={lynk.screens.map((src, i) => ({

@@ -110,7 +110,6 @@ function ScrollableLanding({ src, alt }: { src: string; alt: string }) {
   );
 }
 
-
 /* RAG architecture diagram */
 function RAGDiagram() {
   const ref = useRef<SVGSVGElement>(null);
@@ -295,23 +294,42 @@ export function ExhibitTaraCSE() {
           </div>
         </Reveal>
 
-        {/* Movement 2 — bento */}
+        {/* Movement 2 — bento with unmask reveal and scanner hover */}
         <div className="mt-20 grid grid-cols-1 gap-5 lg:grid-cols-11 lg:gap-6">
           {desktops.map((d, i) => (
-            <Reveal
+            <motion.div
               key={d.src}
-              delay={i * 0.06}
+              initial={{ opacity: 0, clipPath: "inset(20% 0 100% 0)" }}
+              whileInView={{ opacity: 1, clipPath: "inset(0% 0 0% 0)" }}
+              viewport={{ once: true, margin: "-10%" }}
+              transition={{ duration: 0.8, delay: i * 0.1, ease: [0.22, 1, 0.36, 1] }}
               className={`relative ${d.span}`}
             >
-              <button
+              <motion.button
                 onClick={() => setOpenImg({ src: d.src, alt: d.alt })}
-                className="group block w-full overflow-hidden rounded-lg border border-ink-700 bg-ink-900 transition-colors hover:border-navy-400/70"
+                whileHover={{ y: -4, scale: 1.01 }}
+                transition={{ type: "spring", stiffness: 400, damping: 30 }}
+                className="group relative block w-full overflow-hidden rounded-lg border border-ink-700 bg-ink-900 transition-colors hover:border-navy-400/70"
               >
-                <div className="flex items-center justify-between border-b border-ink-700 bg-ink-800/60 px-3 py-1.5">
+                {/* Dossier scanner line effect (visible on hover) */}
+                <div className="absolute inset-0 z-10 pointer-events-none opacity-0 transition-opacity duration-300 group-hover:opacity-100">
+                  <motion.div
+                    className="h-[1px] w-full bg-navy-400/60 shadow-[0_0_8px_1px_rgba(61,99,184,0.5)]"
+                    animate={{ y: ["0%", "5000%"] }}
+                    transition={{
+                      duration: 2.5,
+                      repeat: Infinity,
+                      ease: "linear",
+                    }}
+                  />
+                  <div className="absolute inset-0 bg-navy-900/10 mix-blend-overlay" />
+                </div>
+
+                <div className="relative z-20 flex items-center justify-between border-b border-ink-700 bg-ink-800/60 px-3 py-1.5">
                   <span className="font-mono text-[10px] text-paper-400">
                     {d.tab}
                   </span>
-                  <span className="font-mono text-[10px] text-paper-600 group-hover:text-brass-400">
+                  <span className="font-mono text-[10px] text-paper-600 transition-colors group-hover:text-brass-400">
                     open ↗
                   </span>
                 </div>
@@ -320,13 +338,12 @@ export function ExhibitTaraCSE() {
                   alt={d.alt}
                   width={1400}
                   height={900}
-                  className="h-auto w-full"
+                  className="relative z-0 h-auto w-full"
                   sizes="(max-width: 1024px) 100vw, 50vw"
                 />
-              </button>
-            </Reveal>
+              </motion.button>
+            </motion.div>
           ))}
-
         </div>
 
         {/* Mobile stack — own row */}

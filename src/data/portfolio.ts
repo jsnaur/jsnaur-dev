@@ -8,7 +8,7 @@ export const profile = {
   linkedin: "https://www.linkedin.com/in/jesnartindogan",
   resumeHref: "/Tindogan_Resume.pdf",
   status: "Open to SWE internships & AI engineering roles",
-  building: ["TaraCSE", "LYNK"],
+  building: ["TaraCSE"],
 } as const;
 
 export const sections = [
@@ -39,7 +39,7 @@ export const taracse = {
   ],
   desktop: {
     landing: "/projects/taracse/DesktopWeb/TaraCSE_LandingPageWeb.png",
-    dashboard: "/projects/taracse/DesktopWeb/TaraCSE_DashboardWeb.png",
+    dashboard: "/projects/taracse/DesktopWeb/TaraCSE_DesktopWeb.png",
     practice: "/projects/taracse/DesktopWeb/TaraCSE_PracticeWeb.png",
     mock: "/projects/taracse/DesktopWeb/TaraCSE_MockWeb.png",
     analytics: "/projects/taracse/DesktopWeb/TaraCSE_AnalyticsWeb.png",
@@ -83,7 +83,7 @@ export const lynk = {
   tagline: "AI-integrated campus questing & social networking app.",
   stack: ["React Native", "Expo", "TypeScript", "Tailwind", "Supabase"],
   role: "Project Manager & Full-Stack Developer",
-  period: "Feb 2026 — Present",
+  period: "Feb 2026 — May 2026",
   github: "https://github.com/jsnaur/lynk",
   highlights: [
     "Engineered backend webhooks powering real-time AI content moderation.",

@@ -50,21 +50,20 @@ const TONE_PEDESTAL = {
     "bg-[radial-gradient(ellipse_at_center,rgba(13,21,46,0.55)_0%,rgba(13,21,46,0.25)_35%,transparent_70%)]",
 } as const;
 
-// 3-position carousel: -1 (prev), 0 (active), 1 (next).
-// Anything else fades out beyond the visible track.
+// 3D position carousel: -1 (prev), 0 (active), 1 (next).
 function positionStyle(rel: number) {
   if (rel === 0) {
-    return { x: 0, scale: 1, rotate: 0, opacity: 1, zIndex: 30 };
+    return { x: 0, z: 0, rotateY: 0, scale: 1, opacity: 1, zIndex: 30 };
   }
   if (rel === -1) {
-    return { x: -135, scale: 0.78, rotate: -8, opacity: 0.55, zIndex: 20 };
+    return { x: -140, z: -60, rotateY: 20, scale: 0.85, opacity: 0.5, zIndex: 20 };
   }
   if (rel === 1) {
-    return { x: 135, scale: 0.78, rotate: 8, opacity: 0.55, zIndex: 20 };
+    return { x: 140, z: -60, rotateY: -20, scale: 0.85, opacity: 0.5, zIndex: 20 };
   }
-  // Out-of-frame slides — collapse and hide.
+  
   const sign = rel < 0 ? -1 : 1;
-  return { x: sign * 220, scale: 0.6, rotate: sign * -14, opacity: 0, zIndex: 10 };
+  return { x: sign * 240, z: -100, rotateY: sign * -30, scale: 0.6, opacity: 0, zIndex: 10 };
 }
 
 export function MockupCarousel({
@@ -92,14 +91,13 @@ export function MockupCarousel({
   );
   const jumpTo = useCallback((i: number) => setIndex(((i % len) + len) % len), [len]);
 
-  // Auto-advance (paused on hover/focus, when out of view, or when len <= 1)
+  // Auto-advance
   useEffect(() => {
     if (!autoMs || paused || !inView || len <= 1) return;
     const t = window.setInterval(() => go(1), autoMs);
     return () => window.clearInterval(t);
   }, [autoMs, paused, inView, len, go]);
 
-  // Keyboard arrows when focus is inside the carousel
   const onKeyDown = (e: React.KeyboardEvent) => {
     if (e.key === "ArrowLeft") {
       e.preventDefault();
@@ -130,18 +128,22 @@ export function MockupCarousel({
       tabIndex={0}
       style={{ outline: "none" }}
     >
-      {/* Stage */}
+      {/* Stage with 3D perspective */}
       <div
         className="relative mx-auto"
-        style={{ width: `${width + 280}px`, maxWidth: "100%", height: `${height + 40}px` }}
+        style={{ 
+          width: `${width + 280}px`, 
+          maxWidth: "100%", 
+          height: `${height + 40}px`,
+          perspective: "1200px" 
+        }}
       >
         <AnimatePresence initial={false}>
           {slides.map((s, i) => {
-            // Compute shortest signed distance (-1, 0, 1, …) on a circular index.
             let rel = i - index;
             if (rel > len / 2) rel -= len;
             if (rel < -len / 2) rel += len;
-            // Render only the visible window (prev/active/next) for perf.
+            
             if (Math.abs(rel) > 1) return null;
 
             const pos = positionStyle(rel);
@@ -151,32 +153,42 @@ export function MockupCarousel({
               <motion.div
                 key={s.src}
                 className="absolute left-1/2 top-0"
-                style={{ marginLeft: -width / 2, zIndex: pos.zIndex }}
-                initial={{ opacity: 0, scale: 0.6 }}
+                style={{ 
+                  marginLeft: -width / 2, 
+                  zIndex: pos.zIndex,
+                  transformStyle: "preserve-3d"
+                }}
+                initial={{ opacity: 0, scale: 0.6, z: -200 }}
                 animate={{
                   x: pos.x,
+                  z: pos.z,
+                  rotateY: pos.rotateY,
                   scale: pos.scale,
-                  rotate: pos.rotate,
                   opacity: pos.opacity,
                 }}
-                transition={{ type: "spring", stiffness: 180, damping: 24, mass: 0.9 }}
+                whileHover={!isActive ? { 
+                  scale: pos.scale * 1.05, 
+                  opacity: 0.8,
+                  z: pos.z + 20 
+                } : undefined}
+                transition={{ type: "spring", stiffness: 250, damping: 28, mass: 0.8 }}
                 drag={isActive ? "x" : false}
                 dragConstraints={{ left: 0, right: 0 }}
-                dragElastic={0.18}
+                dragElastic={0.2}
                 onDragEnd={(_, info) => {
-                  const threshold = 60;
-                  if (info.offset.x < -threshold || info.velocity.x < -350) go(1);
-                  else if (info.offset.x > threshold || info.velocity.x > 350) go(-1);
+                  const threshold = 50;
+                  if (info.offset.x < -threshold || info.velocity.x < -300) go(1);
+                  else if (info.offset.x > threshold || info.velocity.x > 300) go(-1);
                 }}
-                whileTap={isActive ? { scale: 0.97 } : undefined}
+                whileTap={isActive ? { scale: 0.96, z: -10 } : undefined}
               >
                 {/* Pedestal shadow */}
                 <span
                   aria-hidden
                   className={cn(
-                    "pointer-events-none absolute left-1/2 bottom-[-12px] h-5 w-[78%] -translate-x-1/2 rounded-full blur-md transition-opacity duration-500",
+                    "pointer-events-none absolute left-1/2 bottom-[-12px] h-5 w-[78%] -translate-x-1/2 rounded-full blur-md transition-opacity duration-300",
                     TONE_PEDESTAL[tone],
-                    isActive ? "opacity-90" : "opacity-40",
+                    isActive ? "opacity-90" : "opacity-0",
                   )}
                 />
 
@@ -186,9 +198,7 @@ export function MockupCarousel({
                     if (!isActive) jumpTo(i);
                     else if (onSlideClick) onSlideClick(s);
                   }}
-                  aria-label={
-                    isActive ? `View ${s.alt}` : `Show ${s.alt}`
-                  }
+                  aria-label={isActive ? `View ${s.alt}` : `Show ${s.alt}`}
                   aria-current={isActive ? "true" : undefined}
                   tabIndex={isActive ? 0 : -1}
                   className={cn(
@@ -207,9 +217,8 @@ export function MockupCarousel({
                     sizes={`${width}px`}
                     style={{ width: `${width}px`, height: `${height}px` }}
                     className={cn(
-                      "h-auto select-none transition-[filter] duration-500",
-                      "drop-shadow-[0_18px_28px_rgba(13,21,46,0.55)]",
-                      isActive ? TONE_GLOW[tone] : "",
+                      "h-auto select-none",
+                      isActive ? TONE_GLOW[tone] : "drop-shadow-lg",
                     )}
                   />
                 </button>
@@ -231,10 +240,10 @@ export function MockupCarousel({
               aria-label={`Go to slide ${i + 1}: ${s.alt}`}
               aria-current={active ? "true" : undefined}
               className={cn(
-                "h-1.5 rounded-full transition-all duration-300",
+                "h-1.5 rounded-full transition-all duration-300 ease-out",
                 active
                   ? `w-6 ${TONE_DOT_ACTIVE[tone]}`
-                  : "w-1.5 bg-ink-700 hover:bg-ink-600",
+                  : "w-1.5 bg-ink-700 hover:bg-ink-500 hover:w-3",
               )}
             />
           );

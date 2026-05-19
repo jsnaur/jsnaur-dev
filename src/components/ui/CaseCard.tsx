@@ -1,5 +1,8 @@
+"use client";
+
 import { cn } from "@/lib/cn";
 import { MonoLabel } from "./MonoLabel";
+import { motion } from "framer-motion";
 
 export function CaseCard({
   filename,
@@ -13,7 +16,9 @@ export function CaseCard({
   bare?: boolean;
 }) {
   return (
-    <div
+    <motion.div
+      whileHover={{ y: -4, scale: 1.01 }}
+      transition={{ type: "spring", stiffness: 400, damping: 30 }}
       className={cn(
         "relative rounded-lg border border-ink-700 bg-ink-900/80 backdrop-blur-sm",
         "transition-colors duration-300 hover:border-navy-400/60",
@@ -29,6 +34,6 @@ export function CaseCard({
         </div>
       )}
       {children}
-    </div>
+    </motion.div>
   );
 }
