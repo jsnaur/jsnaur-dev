@@ -14,7 +14,7 @@ export function StatementHero() {
   return (
     <section
       id="statement"
-      className="relative overflow-hidden border-b border-ink-700 px-6 pt-12 pb-20 sm:px-10 sm:pt-14 sm:pb-24 lg:px-32 lg:pt-16 lg:pb-28"
+      className="relative overflow-hidden border-b border-ink-700 px-6 pt-12 pb-28 sm:px-10 sm:pt-14 sm:pb-32 lg:px-32 lg:pt-16 lg:pb-36"
     >
       {/* Column-rule background */}
       <div className="absolute inset-0 bg-columnrule opacity-60 [mask-image:radial-gradient(ellipse_at_center,black,transparent_75%)]" />
