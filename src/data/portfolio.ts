@@ -125,7 +125,15 @@ export const managedTeams = {
     {
       project: "MediBridge",
       src: "/projects/ManagedTeams/MediBridge1-PM.jpeg",
-      alt: "MediBridge — Project Management Board",
+      alt: "MediBridge — Team Photo",
+      role: "Project Manager",
+      period: "Sept 2025 — Dec 2025",
+      objectPosition: "center",
+    },
+    {
+      project: "MediBridge",
+      src: "/projects/ManagedTeams/MediBridge2-PM.jpg",
+      alt: "MediBridge — School Presentation",
       role: "Project Manager",
       period: "Sept 2025 — Dec 2025",
       objectPosition: "center",
