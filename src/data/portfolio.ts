@@ -39,7 +39,7 @@ export const taracse = {
   ],
   desktop: {
     landing: "/projects/taracse/DesktopWeb/TaraCSE_LandingPageWeb.png",
-    dashboard: "/projects/taracse/DesktopWeb/TaraCSE_DesktopWeb.png",
+    dashboard: "/projects/taracse/DesktopWeb/TaraCSE_DashboardWeb.png",
     practice: "/projects/taracse/DesktopWeb/TaraCSE_PracticeWeb.png",
     mock: "/projects/taracse/DesktopWeb/TaraCSE_MockWeb.png",
     analytics: "/projects/taracse/DesktopWeb/TaraCSE_AnalyticsWeb.png",
@@ -113,6 +113,36 @@ export const campusee = {
     "/projects/campusee/HomeFeedScreen.png",
     "/projects/campusee/MessageScreen.png",
     "/projects/campusee/ProfileScreen.png",
+  ],
+} as const;
+
+/* Managed Teams — PM artifacts */
+export const managedTeams = {
+  title: "Managed Teams",
+  description:
+    "Cross-functional project management evidence — sprint boards, task maps, and delivery tracking from three distinct product teams.",
+  artifacts: [
+    {
+      project: "MediBridge",
+      src: "/projects/ManagedTeams/MediBridge1-PM.jpeg",
+      alt: "MediBridge — Project Management Board",
+      role: "Project Manager",
+      period: "Sept 2025 — Dec 2025",
+    },
+    {
+      project: "CampuSee",
+      src: "/projects/ManagedTeams/CampuSee-PM.jpg",
+      alt: "CampuSee — Project Management Board",
+      role: "Project Manager",
+      period: "2024",
+    },
+    {
+      project: "LYNK",
+      src: "/projects/ManagedTeams/LYNK-PM.jpg",
+      alt: "LYNK — Project Management Board",
+      role: "Project Manager",
+      period: "Feb 2026 — May 2026",
+    },
   ],
 } as const;
 
