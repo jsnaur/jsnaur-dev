@@ -107,8 +107,9 @@ export function MethodologySection() {
   return (
     <section
       id="methodology"
-      className="relative border-b border-ink-700 px-6 py-20 sm:px-10 sm:py-28 lg:px-32"
+      className="relative overflow-hidden border-b border-ink-700 px-6 py-20 sm:px-10 sm:py-28 lg:px-32"
     >
+      <div aria-hidden className="pointer-events-none absolute inset-0 bg-columnrule opacity-30 [mask-image:radial-gradient(ellipse_at_bottom,black,transparent_70%)]" />
       <div className="mx-auto max-w-7xl">
         <Reveal>
           <SectionHeading
