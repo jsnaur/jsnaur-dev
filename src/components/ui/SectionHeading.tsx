@@ -5,13 +5,16 @@ export function SectionHeading({
   num,
   eyebrow,
   title,
+  titleNode,
   caption,
   align = "left",
   className,
 }: {
   num: string;
   eyebrow: string;
-  title: string;
+  title?: string;
+  /** Optional JSX override for the title — use for brand-colored app names. */
+  titleNode?: React.ReactNode;
   caption?: string;
   align?: "left" | "center";
   className?: string;
@@ -28,7 +31,7 @@ export function SectionHeading({
         § {num} — {eyebrow}
       </MonoLabel>
       <h2 className="font-display text-4xl sm:text-5xl md:text-6xl leading-[1.05] tracking-tight text-paper-50">
-        {title}
+        {titleNode ?? title}
       </h2>
       {caption && (
         <p
