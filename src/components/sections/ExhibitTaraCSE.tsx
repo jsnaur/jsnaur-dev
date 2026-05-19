@@ -232,8 +232,11 @@ export function ExhibitTaraCSE() {
   return (
     <section
       id="exhibit-a"
-      className="relative border-b border-ink-700 px-6 py-20 sm:px-10 sm:py-28 lg:px-32"
+      className="relative overflow-hidden border-b border-ink-700 px-6 py-20 sm:px-10 sm:py-28 lg:px-32"
     >
+      {/* Ambient background orbs */}
+      <div aria-hidden className="pointer-events-none absolute right-0 top-0 h-[40rem] w-[40rem] rounded-full bg-navy-500/5 blur-3xl" />
+      <div aria-hidden className="pointer-events-none absolute bottom-0 left-1/4 h-[30rem] w-[30rem] rounded-full bg-brass-400/4 blur-3xl" />
       <div className="mx-auto max-w-7xl">
         <Reveal>
           <SectionHeading
@@ -387,8 +390,39 @@ export function ExhibitTaraCSE() {
           </div>
         </Reveal>
 
-        {/* Movement 3 — RAG diagram */}
-        <Reveal delay={0.1} className="mt-24">
+        {/* Movement 3 — live metrics strip */}
+        <Reveal delay={0.05} className="mt-16">
+          <div className="grid grid-cols-2 gap-4 sm:grid-cols-4">
+            {[
+              { val: "10", unit: "req/min", label: "Rate Limit / User" },
+              { val: "pgvector", unit: "", label: "Vector Engine" },
+              { val: "RAG", unit: "pipeline", label: "Retrieval System" },
+              { val: "Solo", unit: "build", label: "Authorship" },
+            ].map(({ val, unit, label }) => (
+              <motion.div
+                key={label}
+                initial={{ opacity: 0, scale: 0.92 }}
+                whileInView={{ opacity: 1, scale: 1 }}
+                viewport={{ once: true, margin: "-5%" }}
+                transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
+                className="rounded-lg border border-ink-700 bg-ink-900/80 p-4 text-center"
+              >
+                <p className="font-display text-2xl text-paper-50 sm:text-3xl">
+                  {val}
+                  {unit && (
+                    <span className="ml-1 font-mono text-sm text-paper-600">{unit}</span>
+                  )}
+                </p>
+                <p className="mt-1 font-mono text-[10px] uppercase tracking-[0.18em] text-paper-600">
+                  {label}
+                </p>
+              </motion.div>
+            ))}
+          </div>
+        </Reveal>
+
+        {/* Movement 4 — RAG diagram */}
+        <Reveal delay={0.1} className="mt-12">
           <div className="rounded-lg border border-ink-700 bg-ink-900/60 p-6 sm:p-10">
             <RAGDiagram />
           </div>
