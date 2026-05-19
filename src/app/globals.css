@@ -234,6 +234,87 @@ section[id] { scroll-margin-top: 2rem; }
   filter: blur(8px);
 }
 
+/* Marquee / ticker — horizontal infinite scroll */
+@keyframes marquee {
+  from { transform: translateX(0); }
+  to   { transform: translateX(-50%); }
+}
+.anim-marquee { animation: marquee 28s linear infinite; }
+
+/* Floating ambient orbs */
+@keyframes orb-a {
+  0%, 100% { transform: translate(0, 0) scale(1); opacity: 0.12; }
+  33%      { transform: translate(60px, -40px) scale(1.08); opacity: 0.18; }
+  66%      { transform: translate(-30px, 50px) scale(0.95); opacity: 0.10; }
+}
+@keyframes orb-b {
+  0%, 100% { transform: translate(0, 0) scale(1); opacity: 0.08; }
+  40%      { transform: translate(-50px, 30px) scale(1.1); opacity: 0.15; }
+  70%      { transform: translate(40px, -60px) scale(0.9); opacity: 0.06; }
+}
+@keyframes orb-c {
+  0%, 100% { transform: translate(0, 0) scale(1); opacity: 0.10; }
+  50%      { transform: translate(30px, 40px) scale(1.05); opacity: 0.14; }
+}
+.anim-orb-a { animation: orb-a 18s ease-in-out infinite; }
+.anim-orb-b { animation: orb-b 24s ease-in-out infinite; }
+.anim-orb-c { animation: orb-c 14s ease-in-out infinite; }
+
+/* Shimmer — sweeps a highlight across an element */
+@keyframes shimmer {
+  0%   { background-position: -200% center; }
+  100% { background-position: 200% center; }
+}
+.anim-shimmer {
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    rgba(201, 169, 110, 0.25) 40%,
+    rgba(201, 169, 110, 0.5) 50%,
+    rgba(201, 169, 110, 0.25) 60%,
+    transparent 100%
+  );
+  background-size: 200% 100%;
+  animation: shimmer 3s ease-in-out infinite;
+}
+
+/* Dot-grid fade-in — used for section background texture */
+@keyframes dot-fade {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+.anim-dot-fade { animation: dot-fade 1.2s ease-out both; }
+
+/* Border glow pulse — for active/highlighted cards */
+@keyframes border-glow {
+  0%, 100% { box-shadow: 0 0 0 1px rgba(107, 141, 214, 0.15), 0 0 20px -5px rgba(107, 141, 214, 0); }
+  50%      { box-shadow: 0 0 0 1px rgba(107, 141, 214, 0.4),  0 0 30px -5px rgba(107, 141, 214, 0.2); }
+}
+.anim-border-glow { animation: border-glow 3.5s ease-in-out infinite; }
+
+/* Floating particle dots */
+@keyframes particle-rise-a {
+  0%   { transform: translateY(0) translateX(0); opacity: 0; }
+  10%  { opacity: 0.6; }
+  90%  { opacity: 0.3; }
+  100% { transform: translateY(-120px) translateX(15px); opacity: 0; }
+}
+@keyframes particle-rise-b {
+  0%   { transform: translateY(0) translateX(0); opacity: 0; }
+  10%  { opacity: 0.5; }
+  90%  { opacity: 0.2; }
+  100% { transform: translateY(-100px) translateX(-20px); opacity: 0; }
+}
+.anim-particle-a { animation: particle-rise-a 6s ease-in-out infinite; }
+.anim-particle-b { animation: particle-rise-b 8s ease-in-out 2s infinite; }
+
+/* Typing cursor blink */
+@keyframes cursor-blink {
+  0%, 100% { opacity: 1; }
+  50%       { opacity: 0; }
+}
+.anim-cursor { animation: cursor-blink 1s step-end infinite; }
+
 /* Reduced motion */
 @media (prefers-reduced-motion: reduce) {
   *,
