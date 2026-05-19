@@ -8,6 +8,7 @@ import { MockupCarousel } from "@/components/ui/MockupCarousel";
 import { MonoLabel } from "@/components/ui/MonoLabel";
 import { Reveal } from "@/components/ui/Reveal";
 import { Lightbox } from "@/components/ui/Lightbox";
+import { StackBadges } from "@/components/ui/StackBadges";
 
 type Shot = { src: string; alt: string };
 
@@ -83,6 +84,7 @@ function LynkPanel() {
 function ProjectColumn({
   caseNo,
   name,
+  brandName,
   tagline,
   highlights,
   stack,
@@ -94,6 +96,7 @@ function ProjectColumn({
 }: {
   caseNo: string;
   name: string;
+  brandName?: React.ReactNode;
   tagline: string;
   highlights: readonly string[];
   stack: readonly string[];
@@ -110,7 +113,7 @@ function ProjectColumn({
         {topRight}
       </div>
       <h3 className="mt-3 font-display text-4xl tracking-tight text-paper-50 sm:text-5xl">
-        {name}
+        {brandName ?? name}
       </h3>
       <p className="mt-3 max-w-md text-paper-200">{tagline}</p>
       <p className="mt-1 font-mono text-[11px] uppercase tracking-wider text-paper-600">
@@ -128,15 +131,8 @@ function ProjectColumn({
         ))}
       </ul>
 
-      <div className="mt-6 flex flex-wrap items-center gap-1.5">
-        {stack.map((t) => (
-          <span
-            key={t}
-            className="rounded border border-ink-700 px-2 py-0.5 font-mono text-[10px] text-paper-400"
-          >
-            {t}
-          </span>
-        ))}
+      <div className="mt-6">
+        <StackBadges stack={stack} speed={26} />
       </div>
 
       <a
@@ -182,6 +178,12 @@ export function ExhibitDiptych() {
             <ProjectColumn
               caseNo={gesturix.caseNo}
               name={gesturix.name}
+              brandName={
+                <>
+                  <span style={{ color: "#f97316" }}>Gesturi</span>
+                  <span style={{ color: "#ef4444" }}>X</span>
+                </>
+              }
               tagline={gesturix.tagline}
               highlights={gesturix.highlights}
               stack={gesturix.stack}
@@ -220,6 +222,9 @@ export function ExhibitDiptych() {
             <ProjectColumn
               caseNo={lynk.caseNo}
               name={lynk.name}
+              brandName={
+                <span style={{ color: "#d4a255" }}>LYNK</span>
+              }
               tagline={lynk.tagline}
               highlights={lynk.highlights}
               stack={lynk.stack}
