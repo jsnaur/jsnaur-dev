@@ -1,7 +1,9 @@
 "use client";
 
+import Image from "next/image";
 import { useState } from "react";
-import { campusee } from "@/data/portfolio";
+import { motion } from "framer-motion";
+import { campusee, managedTeams } from "@/data/portfolio";
 import { SectionHeading } from "@/components/ui/SectionHeading";
 import { MonoLabel } from "@/components/ui/MonoLabel";
 import { Reveal } from "@/components/ui/Reveal";
@@ -26,9 +28,9 @@ export function ArchiveSection() {
           />
         </Reveal>
 
+        {/* CampuSee Case File */}
         <Reveal delay={0.1} className="mt-12">
           <article className="relative">
-            {/* Folder tab */}
             <div className="relative ml-6 inline-flex">
               <div className="rounded-t-md border border-b-0 border-ink-700 bg-ink-900 px-4 py-1.5">
                 <span className="font-mono text-[10px] uppercase tracking-[0.22em] text-paper-400">
@@ -99,6 +101,101 @@ export function ArchiveSection() {
                     })}
                   </div>
                 </div>
+              </div>
+            </div>
+          </article>
+        </Reveal>
+
+        {/* Managed Teams — PM Artifacts */}
+        <Reveal delay={0.15} className="mt-10">
+          <article className="relative">
+            <div className="relative ml-6 inline-flex">
+              <div className="rounded-t-md border border-b-0 border-ink-700 bg-ink-900 px-4 py-1.5">
+                <span className="font-mono text-[10px] uppercase tracking-[0.22em] text-paper-400">
+                  PM ARTIFACTS — MANAGED TEAMS
+                </span>
+              </div>
+            </div>
+
+            <div className="rounded-md rounded-tl-none border border-ink-700 bg-ink-900/70 p-6 sm:p-10">
+              <div className="mb-8 flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
+                <div>
+                  <MonoLabel className="text-brass-400">project leadership evidence</MonoLabel>
+                  <h3 className="mt-2 font-display text-3xl tracking-tight text-paper-50 sm:text-4xl">
+                    {managedTeams.title}
+                  </h3>
+                  <p className="mt-2 max-w-xl text-sm text-paper-200">
+                    {managedTeams.description}
+                  </p>
+                </div>
+                <span className="shrink-0 font-mono text-[10px] uppercase tracking-[0.22em] text-paper-600">
+                  3 projects · {managedTeams.artifacts.length} boards
+                </span>
+              </div>
+
+              <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
+                {managedTeams.artifacts.map((artifact, i) => (
+                  <motion.div
+                    key={artifact.project}
+                    initial={{ opacity: 0, y: 20 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    viewport={{ once: true, margin: "-5%" }}
+                    transition={{ duration: 0.6, delay: i * 0.1, ease: [0.22, 1, 0.36, 1] }}
+                  >
+                    <motion.button
+                      type="button"
+                      onClick={() => setOpen({ src: artifact.src, alt: artifact.alt })}
+                      whileHover={{ y: -4, scale: 1.01 }}
+                      transition={{ type: "spring", stiffness: 400, damping: 30 }}
+                      className="group relative block w-full overflow-hidden rounded-lg border border-ink-700 bg-ink-900 text-left transition-colors hover:border-navy-400/70"
+                    >
+                      {/* Dossier scanner line */}
+                      <div className="absolute inset-0 z-10 pointer-events-none opacity-0 transition-opacity duration-300 group-hover:opacity-100">
+                        <motion.div
+                          className="h-[1px] w-full bg-brass-400/60 shadow-[0_0_8px_1px_rgba(201,169,110,0.4)]"
+                          animate={{ y: ["0%", "5000%"] }}
+                          transition={{ duration: 2.5, repeat: Infinity, ease: "linear" }}
+                        />
+                        <div className="absolute inset-0 bg-brass-400/5 mix-blend-overlay" />
+                      </div>
+
+                      {/* Tab bar */}
+                      <div className="relative z-20 flex items-center justify-between border-b border-ink-700 bg-ink-800/60 px-3 py-1.5">
+                        <span className="font-mono text-[10px] text-paper-400">
+                          {artifact.project}.pm
+                        </span>
+                        <span className="font-mono text-[10px] text-paper-600 transition-colors group-hover:text-brass-400">
+                          open ↗
+                        </span>
+                      </div>
+
+                      <div className="relative aspect-[4/3] overflow-hidden bg-ink-800">
+                        <Image
+                          src={artifact.src}
+                          alt={artifact.alt}
+                          fill
+                          className="object-cover object-top transition-transform duration-700 ease-out group-hover:scale-[1.03]"
+                          sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
+                        />
+                      </div>
+
+                      <div className="relative z-20 border-t border-ink-700 px-3 py-2.5">
+                        <p className="font-display text-base text-paper-50">{artifact.project}</p>
+                        <div className="mt-1 flex items-center justify-between">
+                          <span className="font-mono text-[10px] text-paper-600">{artifact.role}</span>
+                          <span className="font-mono text-[10px] text-paper-600">{artifact.period}</span>
+                        </div>
+                      </div>
+                    </motion.button>
+                  </motion.div>
+                ))}
+              </div>
+
+              <div className="mt-8 border-t border-ink-700 pt-6">
+                <p className="font-mono text-[11px] text-paper-600">
+                  ◆ PM boards capture sprint planning, task ownership, and delivery cadence across
+                  3 multi-person teams — GesturiX (4–6 devs), LYNK (4–6 devs), CampuSee
+                </p>
               </div>
             </div>
           </article>
