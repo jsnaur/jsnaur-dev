@@ -125,8 +125,8 @@ export function StatementHero() {
             style={{ animationDelay: "1.3s" }}
           >
             {[
-              { val: "4+", label: "Projects Shipped" },
-              { val: "3", label: "Teams Led" },
+              { val: "5+", label: "Projects Shipped" },
+              { val: "4", label: "Teams Led" },
               { val: "AI", label: "Integrated" },
             ].map(({ val, label }) => (
               <div key={label} className="group">
