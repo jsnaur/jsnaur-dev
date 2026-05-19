@@ -2,25 +2,24 @@
 
 import Image from "next/image";
 import { useRef } from "react";
-import { motion, useInView } from "framer-motion";
+import {
+  motion,
+  useInView,
+  useMotionValue,
+  useSpring,
+  useTransform,
+} from "framer-motion";
 import { cn } from "@/lib/cn";
 
 type Props = {
   src: string;
   alt: string;
-  /** Display width in px (height auto). */
   width?: number;
-  /** Floating rhythm — three offset cycles so stacks never sync. */
   rhythm?: "a" | "b" | "c";
-  /** Static rotation in degrees (the float wraps around this). */
   rotate?: number;
-  /** Static translate (x, y) in px applied to the outer wrapper. */
   offset?: { x?: number; y?: number };
-  /** Initial fade-in tilt offset — direction the mockup enters from. */
   enterFrom?: "left" | "right" | "center";
-  /** Delay multiplier for staggered reveals. */
   delayIndex?: number;
-  /** Glow/shadow tint hint. */
   tone?: "navy" | "brass" | "neutral";
   className?: string;
   onClick?: () => void;
@@ -29,9 +28,9 @@ type Props = {
 };
 
 const TONE_HOVER = {
-  navy: "group-hover:drop-shadow-[0_25px_40px_rgba(107,141,214,0.35)]",
-  brass: "group-hover:drop-shadow-[0_25px_40px_rgba(201,169,110,0.35)]",
-  neutral: "group-hover:drop-shadow-[0_25px_40px_rgba(13,21,46,0.6)]",
+  navy: "group-hover:drop-shadow-[0_28px_44px_rgba(107,141,214,0.45)]",
+  brass: "group-hover:drop-shadow-[0_28px_44px_rgba(201,169,110,0.45)]",
+  neutral: "group-hover:drop-shadow-[0_28px_44px_rgba(13,21,46,0.7)]",
 } as const;
 
 const TONE_PEDESTAL = {
@@ -40,83 +39,97 @@ const TONE_PEDESTAL = {
   neutral: "bg-[radial-gradient(ellipse_at_center,rgba(13,21,46,0.55)_0%,rgba(13,21,46,0.25)_35%,transparent_70%)]",
 } as const;
 
-/**
- * Displays a mobile mockup PNG that already contains its own device bezel and
- * has a transparent background. No outer frame is drawn — the mockup floats
- * directly on the page with a soft pedestal shadow, gentle vertical drift,
- * and a hover lift that intensifies the drop shadow.
- *
- * For static placement, pass a parent that controls position; for stacks of
- * 2–3 phones, vary `rhythm` per child so they don't breathe in unison.
- */
-export function TransparentMockup({
+const TONE_SHINE = {
+  navy: "rgba(107,141,214,0.14)",
+  brass: "rgba(201,169,110,0.14)",
+  neutral: "rgba(255,255,255,0.08)",
+} as const;
+
+const FLOAT_CLASS = {
+  a: "anim-float-a",
+  b: "anim-float-b",
+  c: "anim-float-c",
+} as const;
+
+function Inner({
   src,
   alt,
-  width = 220,
-  rhythm = "a",
-  rotate = 0,
+  width,
+  height,
+  tone,
+  rhythm,
+  rotate,
   offset,
-  enterFrom = "center",
-  delayIndex = 0,
-  tone = "neutral",
+  enterFrom,
+  delayIndex,
+  priority,
   className,
-  onClick,
-  ariaLabel,
-  priority = false,
-}: Props) {
+}: {
+  src: string; alt: string; width: number; height: number;
+  tone: "navy" | "brass" | "neutral";
+  rhythm: "a" | "b" | "c";
+  rotate: number;
+  offset: { x?: number; y?: number };
+  enterFrom: "left" | "right" | "center";
+  delayIndex: number;
+  priority: boolean;
+  className?: string;
+}) {
   const ref = useRef<HTMLDivElement>(null);
   const inView = useInView(ref, { once: true, margin: "-12%" });
 
-  const enterX = enterFrom === "left" ? -28 : enterFrom === "right" ? 28 : 0;
+  const mouseX = useMotionValue(0);
+  const mouseY = useMotionValue(0);
+  const springX = useSpring(mouseX, { stiffness: 180, damping: 24 });
+  const springY = useSpring(mouseY, { stiffness: 180, damping: 24 });
+  const rotateX = useTransform(springY, [-0.5, 0.5], [10, -10]);
+  const rotateY = useTransform(springX, [-0.5, 0.5], [-10, 10]);
+  const shineX = useTransform(springX, [-0.5, 0.5], ["15%", "85%"]);
+  const shineY = useTransform(springY, [-0.5, 0.5], ["15%", "85%"]);
 
-  // Mockup PNGs are 1415x2000 (≈ 0.7075 aspect). Compute display height to
-  // match so next/image reserves the correct intrinsic box.
-  const height = Math.round(width * (2000 / 1415));
-
-  // Float class is deterministic from props so SSR and client render match.
-  // The global `@media (prefers-reduced-motion)` rule in globals.css disables
-  // the animation for users who opt out.
-  const floatClass =
-    rhythm === "a"
-      ? "anim-float-a"
-      : rhythm === "b"
-        ? "anim-float-b"
-        : "anim-float-c";
-
+  const enterX = enterFrom === "left" ? -30 : enterFrom === "right" ? 30 : 0;
   const baseTransform = `translate(${offset?.x ?? 0}px, ${offset?.y ?? 0}px) rotate(${rotate}deg)`;
 
-  const content = (
+  const onMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
+    const rect = e.currentTarget.getBoundingClientRect();
+    mouseX.set((e.clientX - rect.left) / rect.width - 0.5);
+    mouseY.set((e.clientY - rect.top) / rect.height - 0.5);
+  };
+  const onMouseLeave = () => { mouseX.set(0); mouseY.set(0); };
+
+  return (
     <motion.div
       ref={ref}
-      initial={{ opacity: 0, x: enterX, y: 20 }}
+      initial={{ opacity: 0, x: enterX, y: 24 }}
       animate={inView ? { opacity: 1, x: 0, y: 0 } : {}}
-      transition={{
-        duration: 0.9,
-        delay: 0.08 * delayIndex,
-        ease: [0.22, 1, 0.36, 1],
-      }}
+      transition={{ duration: 0.9, delay: 0.08 * delayIndex, ease: [0.22, 1, 0.36, 1] }}
       style={{ transform: baseTransform }}
-      className={cn(
-        "group relative inline-block will-change-transform",
-        className,
-      )}
+      className={cn("group relative inline-block will-change-transform", className)}
     >
-      {/* Pedestal shadow — anchors the mockup to the page surface */}
+      {/* Pedestal */}
       <span
         aria-hidden
         className={cn(
-          "pointer-events-none absolute left-1/2 bottom-[-14px] h-6 w-[78%] -translate-x-1/2 rounded-full blur-md transition-opacity duration-500",
+          "pointer-events-none absolute bottom-[-14px] left-1/2 h-6 w-[78%] -translate-x-1/2 rounded-full blur-md transition-opacity duration-500",
           TONE_PEDESTAL[tone],
           "opacity-70 group-hover:opacity-100",
         )}
       />
 
-      {/* Floating layer — gentle drift in place */}
-      <span
+      {/* Float + tilt wrapper */}
+      <motion.div
+        onMouseMove={onMouseMove}
+        onMouseLeave={onMouseLeave}
+        style={{
+          rotateX,
+          rotateY,
+          transformStyle: "preserve-3d",
+          transformPerspective: 700,
+        }}
         className={cn(
-          "block transition-transform duration-500 ease-out",
-          floatClass,
-          "group-hover:-translate-y-2 group-hover:scale-[1.025]",
+          "relative block transition-[filter] duration-500 ease-out",
+          FLOAT_CLASS[rhythm],
+          "group-hover:-translate-y-2",
         )}
       >
         <Image
@@ -133,8 +146,60 @@ export function TransparentMockup({
             TONE_HOVER[tone],
           )}
         />
-      </span>
+
+        {/* Mouse-follow shine */}
+        <motion.div
+          className="pointer-events-none absolute inset-0 rounded-[inherit] opacity-0 group-hover:opacity-100 transition-opacity duration-300"
+          style={{
+            background: `radial-gradient(circle at ${shineX} ${shineY}, ${TONE_SHINE[tone]} 0%, transparent 55%)`,
+          }}
+        />
+
+        {/* Scan-line sweep on hover */}
+        <div className="pointer-events-none absolute inset-0 overflow-hidden opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+          <motion.div
+            className="h-[1px] w-full bg-white/10 shadow-[0_0_6px_1px_rgba(255,255,255,0.08)]"
+            animate={{ y: ["0%", "5000%"] }}
+            transition={{ duration: 3, repeat: Infinity, ease: "linear" }}
+          />
+        </div>
+      </motion.div>
     </motion.div>
+  );
+}
+
+export function TransparentMockup({
+  src,
+  alt,
+  width = 220,
+  rhythm = "a",
+  rotate = 0,
+  offset = {},
+  enterFrom = "center",
+  delayIndex = 0,
+  tone = "neutral",
+  className,
+  onClick,
+  ariaLabel,
+  priority = false,
+}: Props) {
+  const height = Math.round(width * (2000 / 1415));
+
+  const inner = (
+    <Inner
+      src={src}
+      alt={alt}
+      width={width}
+      height={height}
+      tone={tone}
+      rhythm={rhythm}
+      rotate={rotate}
+      offset={offset}
+      enterFrom={enterFrom}
+      delayIndex={delayIndex}
+      priority={priority}
+      className={className}
+    />
   );
 
   if (onClick) {
@@ -145,9 +210,9 @@ export function TransparentMockup({
         aria-label={ariaLabel ?? alt}
         className="cursor-zoom-in border-0 bg-transparent p-0 focus:outline-none focus-visible:ring-2 focus-visible:ring-brass-400/60 focus-visible:ring-offset-2 focus-visible:ring-offset-ink-950 rounded-2xl"
       >
-        {content}
+        {inner}
       </button>
     );
   }
-  return content;
+  return inner;
 }
