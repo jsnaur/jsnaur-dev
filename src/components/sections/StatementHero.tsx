@@ -8,6 +8,15 @@ import { MagneticButton } from "@/components/ui/MagneticButton";
 const headline = ["Architecting scalable", "systems today."];
 const headlineB = ["Preparing for the", "[justice] system tomorrow."];
 
+const TICKER_ITEMS = [
+  "Next.js", "TypeScript", "Supabase", "PostgreSQL", "pgvector",
+  "Gemini AI", "React Native", "Expo", "PyTorch", "Tailwind CSS",
+  "Edge Functions", "REST APIs", "RAG Pipeline", "AI Moderation",
+  "Next.js", "TypeScript", "Supabase", "PostgreSQL", "pgvector",
+  "Gemini AI", "React Native", "Expo", "PyTorch", "Tailwind CSS",
+  "Edge Functions", "REST APIs", "RAG Pipeline", "AI Moderation",
+];
+
 export function StatementHero() {
   return (
     <section
@@ -17,11 +26,28 @@ export function StatementHero() {
       {/* Column-rule background */}
       <div className="absolute inset-0 bg-columnrule opacity-60 [mask-image:radial-gradient(ellipse_at_center,black,transparent_75%)]" />
 
-      {/* Slow radial glow — pure CSS, no JS animation cost */}
+      {/* Ambient glow orbs */}
       <div
         aria-hidden
-        className="anim-glow pointer-events-none absolute left-1/3 top-1/3 h-[40rem] w-[40rem] rounded-full bg-navy-500/10 blur-3xl"
+        className="anim-orb-a pointer-events-none absolute left-1/4 top-1/4 h-[36rem] w-[36rem] rounded-full bg-navy-500/10 blur-3xl"
       />
+      <div
+        aria-hidden
+        className="anim-orb-b pointer-events-none absolute right-1/4 bottom-1/3 h-[28rem] w-[28rem] rounded-full bg-brass-400/6 blur-3xl"
+      />
+      <div
+        aria-hidden
+        className="anim-orb-c pointer-events-none absolute left-2/3 top-2/3 h-[20rem] w-[20rem] rounded-full bg-navy-400/8 blur-3xl"
+      />
+
+      {/* Floating particles */}
+      <div aria-hidden className="pointer-events-none absolute inset-0 overflow-hidden">
+        <span className="anim-particle-a absolute left-[15%] top-[60%] h-1 w-1 rounded-full bg-brass-400/40" />
+        <span className="anim-particle-b absolute left-[30%] top-[70%] h-0.5 w-0.5 rounded-full bg-navy-300/40" />
+        <span className="anim-particle-a absolute left-[60%] top-[55%] h-1 w-1 rounded-full bg-brass-400/30" style={{ animationDelay: "3s" }} />
+        <span className="anim-particle-b absolute left-[75%] top-[65%] h-0.5 w-0.5 rounded-full bg-navy-300/30" style={{ animationDelay: "1s" }} />
+        <span className="anim-particle-a absolute left-[45%] top-[75%] h-1 w-1 rounded-full bg-brass-400/20" style={{ animationDelay: "5s" }} />
+      </div>
 
       <div className="relative mx-auto grid max-w-7xl grid-cols-1 gap-12 lg:grid-cols-12 lg:gap-16">
         {/* Left — headline */}
@@ -92,6 +118,27 @@ export function StatementHero() {
               Download Résumé
             </MagneticButton>
           </div>
+
+          {/* Stats row */}
+          <div
+            className="anim-fade-up mt-12 grid grid-cols-3 gap-4 border-t border-ink-700 pt-8 sm:gap-8"
+            style={{ animationDelay: "1.3s" }}
+          >
+            {[
+              { val: "4+", label: "Projects Shipped" },
+              { val: "3", label: "Teams Led" },
+              { val: "AI", label: "Integrated" },
+            ].map(({ val, label }) => (
+              <div key={label} className="group">
+                <p className="font-display text-3xl text-paper-50 transition-colors duration-300 group-hover:text-brass-400 sm:text-4xl">
+                  {val}
+                </p>
+                <p className="mt-1 font-mono text-[10px] uppercase tracking-[0.18em] text-paper-600">
+                  {label}
+                </p>
+              </div>
+            ))}
+          </div>
         </div>
 
         {/* Right — identification card */}
@@ -108,7 +155,7 @@ export function StatementHero() {
                 </span>
               </div>
 
-              {/* VERIFIED badge — pops in after the scan completes */}
+              {/* VERIFIED badge */}
               <div className="anim-badge-pop absolute right-3 top-3 z-20 flex items-center gap-1.5 rounded-sm border border-verdict/60 bg-ink-950/90 px-2 py-1">
                 <span className="block h-1.5 w-1.5 rounded-full bg-verdict shadow-[0_0_8px_var(--color-verdict)]" />
                 <span className="font-mono text-[9px] uppercase tracking-[0.22em] text-verdict">
@@ -116,7 +163,7 @@ export function StatementHero() {
                 </span>
               </div>
 
-              {/* Portrait — flickers during the analysis pass */}
+              {/* Portrait */}
               <div className="anim-id-flicker">
                 <Image
                   src="/jsnaur-portrait.png"
@@ -128,15 +175,15 @@ export function StatementHero() {
                 />
               </div>
 
-              {/* CRT scanlines — always on, very subtle */}
+              {/* CRT scanlines */}
               <div className="scanline-overlay pointer-events-none absolute inset-0 z-10 opacity-40 mix-blend-overlay" />
 
-              {/* Initial scan beam — sweeps top → bottom once on mount */}
+              {/* Initial scan beam */}
               <div className="pointer-events-none absolute inset-0 z-10 overflow-hidden">
                 <div className="anim-scan-sweep absolute inset-x-0 top-0 h-24 bg-gradient-to-b from-transparent via-brass-400/30 to-transparent shadow-[0_0_30px_8px_rgba(201,169,110,0.25)]" />
               </div>
 
-              {/* Recurring soft scan line — slow, ambient */}
+              {/* Recurring soft scan line */}
               <div className="pointer-events-none absolute inset-0 z-10 overflow-hidden">
                 <div className="anim-scan-loop absolute inset-x-0 top-0 h-px bg-brass-400/60 shadow-[0_0_8px_2px_rgba(201,169,110,0.4)]" />
               </div>
@@ -149,7 +196,7 @@ export function StatementHero() {
                 <span className="absolute bottom-0 right-0 h-3 w-3 border-b border-r border-brass-400/70" />
               </div>
 
-              {/* Bottom vignette — keeps the IDENTIFICATION + VERIFIED text readable */}
+              {/* Bottom vignette */}
               <div className="pointer-events-none absolute inset-0 z-[5] bg-gradient-to-t from-ink-950/80 via-transparent to-transparent" />
             </div>
 
@@ -171,6 +218,25 @@ export function StatementHero() {
               </div>
             </div>
           </div>
+        </div>
+      </div>
+
+      {/* Scrolling tech ticker */}
+      <div
+        className="anim-fade-in pointer-events-none absolute inset-x-0 bottom-0 overflow-hidden border-t border-ink-700/50 py-2"
+        style={{ animationDelay: "1.5s" }}
+        aria-hidden
+      >
+        <div className="anim-marquee flex w-max gap-0">
+          {TICKER_ITEMS.map((item, i) => (
+            <span
+              key={i}
+              className="flex items-center gap-4 px-6 font-mono text-[10px] uppercase tracking-[0.22em] text-paper-600"
+            >
+              <span className="h-px w-3 bg-brass-400/50" />
+              {item}
+            </span>
+          ))}
         </div>
       </div>
     </section>
