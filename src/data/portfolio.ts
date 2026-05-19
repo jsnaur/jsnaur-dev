@@ -128,6 +128,7 @@ export const managedTeams = {
       alt: "MediBridge — Project Management Board",
       role: "Project Manager",
       period: "Sept 2025 — Dec 2025",
+      objectPosition: "center",
     },
     {
       project: "CampuSee",
@@ -135,6 +136,7 @@ export const managedTeams = {
       alt: "CampuSee — Project Management Board",
       role: "Project Manager",
       period: "2024",
+      objectPosition: "center",
     },
     {
       project: "LYNK",
@@ -142,6 +144,7 @@ export const managedTeams = {
       alt: "LYNK — Project Management Board",
       role: "Project Manager",
       period: "Feb 2026 — May 2026",
+      objectPosition: "bottom",
     },
   ],
 } as const;
