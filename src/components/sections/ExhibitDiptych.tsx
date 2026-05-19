@@ -9,6 +9,7 @@ import { MonoLabel } from "@/components/ui/MonoLabel";
 import { Reveal } from "@/components/ui/Reveal";
 import { Lightbox } from "@/components/ui/Lightbox";
 import { StackBadges } from "@/components/ui/StackBadges";
+import { GitHubButton } from "@/components/ui/GitHubButton";
 
 type Shot = { src: string; alt: string };
 
@@ -135,14 +136,7 @@ function ProjectColumn({
         <StackBadges stack={stack} speed={26} />
       </div>
 
-      <a
-        href={github}
-        target="_blank"
-        rel="noreferrer"
-        className="mt-6 inline-flex items-center gap-1.5 font-mono text-[11px] uppercase tracking-wider text-navy-300 hover:text-brass-400"
-      >
-        repository ↗
-      </a>
+      <GitHubButton href={github} className="mt-6" />
     </div>
   );
 }

@@ -10,6 +10,7 @@ import { Reveal } from "@/components/ui/Reveal";
 import { Lightbox } from "@/components/ui/Lightbox";
 import { TransparentMockup } from "@/components/ui/TransparentMockup";
 import { StackBadges } from "@/components/ui/StackBadges";
+import { GitHubButton } from "@/components/ui/GitHubButton";
 
 export function ArchiveSection() {
   const [open, setOpen] = useState<{ src: string; alt: string } | null>(null);
@@ -56,14 +57,7 @@ export function ArchiveSection() {
                     <StackBadges stack={campusee.stack} speed={20} />
                   </div>
 
-                  <a
-                    href={campusee.github}
-                    target="_blank"
-                    rel="noreferrer"
-                    className="mt-6 inline-flex items-center gap-1.5 font-mono text-[11px] uppercase tracking-wider text-navy-300 hover:text-brass-400"
-                  >
-                    repository ↗
-                  </a>
+                  <GitHubButton href={campusee.github} className="mt-6" />
                 </div>
 
                 <div className="lg:col-span-7">

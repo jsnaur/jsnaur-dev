@@ -18,6 +18,7 @@ import { Reveal } from "@/components/ui/Reveal";
 import { MonoLabel } from "@/components/ui/MonoLabel";
 import { Lightbox } from "@/components/ui/Lightbox";
 import { StackBadges } from "@/components/ui/StackBadges";
+import { GitHubButton } from "@/components/ui/GitHubButton";
 
 /* Auto-scrolling browser preview with manual takeover */
 function ScrollableLanding({ src, alt }: { src: string; alt: string }) {
@@ -376,14 +377,7 @@ export function ExhibitTaraCSE() {
                   <div className="border-t border-ink-700 pt-4">
                     <StackBadges stack={taracse.stack} speed={22} />
                   </div>
-                  <a
-                    href={taracse.github}
-                    target="_blank"
-                    rel="noreferrer"
-                    className="inline-flex items-center gap-1.5 font-mono text-[11px] uppercase tracking-wider text-navy-300 hover:text-brass-400"
-                  >
-                    repository ↗
-                  </a>
+                  <GitHubButton href={taracse.github} />
                 </div>
               </CaseCard>
             </div>
