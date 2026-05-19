@@ -9,7 +9,7 @@ import { ClosingSection } from "@/components/sections/ClosingSection";
 
 export default function Home() {
   return (
-    <main className="relative">
+    <main className="relative pb-16 lg:pb-0">
       <DossierRail />
       <CaseHeader />
       <StatementHero />
