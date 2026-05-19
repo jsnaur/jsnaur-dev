@@ -191,7 +191,7 @@ export function ExhibitDiptych() {
               visual={
                 <div className="relative">
                   <MockupCarousel
-                    width={190}
+                    width={170}
                     tone="brass"
                     autoMs={1500}
                     ariaLabel="GesturiX screens"
@@ -209,6 +209,13 @@ export function ExhibitDiptych() {
             />
           </Reveal>
 
+          {/* Mobile "vs" divider — between the two columns */}
+          <div className="flex items-center gap-4 lg:hidden">
+            <div className="h-px flex-1 bg-ink-700" />
+            <span className="rounded-full border border-ink-700 bg-ink-950 px-3 py-1 text-sm font-display italic text-paper-400">vs.</span>
+            <div className="h-px flex-1 bg-ink-700" />
+          </div>
+
           <Reveal delay={0.1}>
             <ProjectColumn
               caseNo={lynk.caseNo}
@@ -222,7 +229,7 @@ export function ExhibitDiptych() {
               visual={
                 <div className="relative">
                   <MockupCarousel
-                    width={210}
+                    width={180}
                     tone="navy"
                     autoMs={1500}
                     ariaLabel="LYNK screens"
