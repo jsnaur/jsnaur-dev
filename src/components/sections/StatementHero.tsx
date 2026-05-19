@@ -4,18 +4,11 @@ import Image from "next/image";
 import { profile } from "@/data/portfolio";
 import { MonoLabel } from "@/components/ui/MonoLabel";
 import { MagneticButton } from "@/components/ui/MagneticButton";
+import { TechTicker } from "@/components/ui/TechTicker";
 
 const headline = ["Architecting scalable", "systems today."];
 const headlineB = ["Preparing for the", "[justice] system tomorrow."];
 
-const TICKER_ITEMS = [
-  "Next.js", "TypeScript", "Supabase", "PostgreSQL", "pgvector",
-  "Gemini AI", "React Native", "Expo", "PyTorch", "Tailwind CSS",
-  "Edge Functions", "REST APIs", "RAG Pipeline", "AI Moderation",
-  "Next.js", "TypeScript", "Supabase", "PostgreSQL", "pgvector",
-  "Gemini AI", "React Native", "Expo", "PyTorch", "Tailwind CSS",
-  "Edge Functions", "REST APIs", "RAG Pipeline", "AI Moderation",
-];
 
 export function StatementHero() {
   return (
@@ -221,24 +214,8 @@ export function StatementHero() {
         </div>
       </div>
 
-      {/* Scrolling tech ticker */}
-      <div
-        className="anim-fade-in pointer-events-none absolute inset-x-0 bottom-0 overflow-hidden border-t border-ink-700/50 py-2"
-        style={{ animationDelay: "1.5s" }}
-        aria-hidden
-      >
-        <div className="anim-marquee flex w-max gap-0">
-          {TICKER_ITEMS.map((item, i) => (
-            <span
-              key={i}
-              className="flex items-center gap-4 px-6 font-mono text-[10px] uppercase tracking-[0.22em] text-paper-600"
-            >
-              <span className="h-px w-3 bg-brass-400/50" />
-              {item}
-            </span>
-          ))}
-        </div>
-      </div>
+      {/* Scrolling tech ticker with icons */}
+      <TechTicker />
     </section>
   );
 }
