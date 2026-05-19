@@ -246,6 +246,7 @@ section[id] { scroll-margin-top: 2rem; }
   from { transform: translateX(0); }
   to   { transform: translateX(-33.333%); }
 }
+.anim-ticker { animation: ticker-scroll 28s linear infinite; }
 
 /* Floating ambient orbs */
 @keyframes orb-a {
