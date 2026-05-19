@@ -2,7 +2,13 @@
 
 import Image from "next/image";
 import { useEffect, useRef, useState } from "react";
-import { motion, useInView } from "framer-motion";
+import {
+  motion,
+  useInView,
+  useMotionValue,
+  useSpring,
+  useTransform,
+} from "framer-motion";
 import { taracse } from "@/data/portfolio";
 import { SectionHeading } from "@/components/ui/SectionHeading";
 import { CaseCard } from "@/components/ui/CaseCard";
@@ -199,6 +205,93 @@ function RAGDiagram() {
   );
 }
 
+/* Desktop screenshot card with mouse-tilt + scanner */
+function BentoCard({
+  d,
+  index,
+  onOpen,
+}: {
+  d: { src: string; alt: string; tab: string; span: string };
+  index: number;
+  onOpen: () => void;
+}) {
+  const cardRef = useRef<HTMLButtonElement>(null);
+  const mouseX = useMotionValue(0);
+  const mouseY = useMotionValue(0);
+  const springX = useSpring(mouseX, { stiffness: 180, damping: 26 });
+  const springY = useSpring(mouseY, { stiffness: 180, damping: 26 });
+  const rotateX = useTransform(springY, [-0.5, 0.5], [5, -5]);
+  const rotateY = useTransform(springX, [-0.5, 0.5], [-6, 6]);
+  const shineX = useTransform(springX, [-0.5, 0.5], ["20%", "80%"]);
+  const shineY = useTransform(springY, [-0.5, 0.5], ["20%", "80%"]);
+
+  const onMouseMove = (e: React.MouseEvent<HTMLButtonElement>) => {
+    const rect = e.currentTarget.getBoundingClientRect();
+    mouseX.set((e.clientX - rect.left) / rect.width - 0.5);
+    mouseY.set((e.clientY - rect.top) / rect.height - 0.5);
+  };
+  const onMouseLeave = () => { mouseX.set(0); mouseY.set(0); };
+
+  return (
+    <motion.div
+      initial={{ opacity: 0, clipPath: "inset(20% 0 100% 0)" }}
+      whileInView={{ opacity: 1, clipPath: "inset(0% 0 0% 0)" }}
+      viewport={{ once: true, margin: "-10%" }}
+      transition={{ duration: 0.85, delay: index * 0.12, ease: [0.22, 1, 0.36, 1] }}
+      className={`relative ${d.span}`}
+      style={{ perspective: "900px" }}
+    >
+      <motion.button
+        ref={cardRef}
+        onClick={onOpen}
+        onMouseMove={onMouseMove}
+        onMouseLeave={onMouseLeave}
+        style={{ rotateX, rotateY, transformStyle: "preserve-3d" }}
+        whileHover={{ scale: 1.015 }}
+        transition={{ type: "spring", stiffness: 320, damping: 28 }}
+        className="group relative block w-full overflow-hidden rounded-lg border border-ink-700 bg-ink-900 transition-colors hover:border-navy-400/70"
+      >
+        {/* Scanner sweep */}
+        <div className="absolute inset-0 z-10 pointer-events-none opacity-0 transition-opacity duration-300 group-hover:opacity-100">
+          <motion.div
+            className="h-[2px] w-full bg-gradient-to-r from-transparent via-navy-400/70 to-transparent shadow-[0_0_12px_2px_rgba(61,99,184,0.45)]"
+            animate={{ y: ["0%", "5000%"] }}
+            transition={{ duration: 2.2, repeat: Infinity, ease: "linear" }}
+          />
+        </div>
+
+        {/* Mouse-follow shine */}
+        <motion.div
+          className="pointer-events-none absolute inset-0 z-10 rounded-lg opacity-0 transition-opacity duration-300 group-hover:opacity-100"
+          style={{
+            background: `radial-gradient(circle at ${shineX} ${shineY}, rgba(107,141,214,0.10) 0%, transparent 55%)`,
+          }}
+        />
+
+        {/* Tab bar */}
+        <div className="relative z-20 flex items-center justify-between border-b border-ink-700 bg-ink-800/60 px-3 py-1.5">
+          <span className="font-mono text-[10px] text-paper-400">{d.tab}</span>
+          <motion.span
+            className="font-mono text-[10px] text-paper-600"
+            whileHover={{ color: "#c9a96e" }}
+          >
+            open ↗
+          </motion.span>
+        </div>
+
+        <Image
+          src={d.src}
+          alt={d.alt}
+          width={1400}
+          height={900}
+          className="relative z-0 h-auto w-full transition-transform duration-500 ease-out group-hover:scale-[1.02]"
+          sizes="(max-width: 1024px) 100vw, 50vw"
+        />
+      </motion.button>
+    </motion.div>
+  );
+}
+
 export function ExhibitTaraCSE() {
   const [openImg, setOpenImg] = useState<{ src: string; alt: string } | null>(null);
 
@@ -297,55 +390,15 @@ export function ExhibitTaraCSE() {
           </div>
         </Reveal>
 
-        {/* Movement 2 — bento with unmask reveal and scanner hover */}
+        {/* Movement 2 — bento with unmask reveal, tilt, and scanner hover */}
         <div className="mt-20 grid grid-cols-1 gap-5 lg:grid-cols-11 lg:gap-6">
           {desktops.map((d, i) => (
-            <motion.div
+            <BentoCard
               key={d.src}
-              initial={{ opacity: 0, clipPath: "inset(20% 0 100% 0)" }}
-              whileInView={{ opacity: 1, clipPath: "inset(0% 0 0% 0)" }}
-              viewport={{ once: true, margin: "-10%" }}
-              transition={{ duration: 0.8, delay: i * 0.1, ease: [0.22, 1, 0.36, 1] }}
-              className={`relative ${d.span}`}
-            >
-              <motion.button
-                onClick={() => setOpenImg({ src: d.src, alt: d.alt })}
-                whileHover={{ y: -4, scale: 1.01 }}
-                transition={{ type: "spring", stiffness: 400, damping: 30 }}
-                className="group relative block w-full overflow-hidden rounded-lg border border-ink-700 bg-ink-900 transition-colors hover:border-navy-400/70"
-              >
-                {/* Dossier scanner line effect (visible on hover) */}
-                <div className="absolute inset-0 z-10 pointer-events-none opacity-0 transition-opacity duration-300 group-hover:opacity-100">
-                  <motion.div
-                    className="h-[1px] w-full bg-navy-400/60 shadow-[0_0_8px_1px_rgba(61,99,184,0.5)]"
-                    animate={{ y: ["0%", "5000%"] }}
-                    transition={{
-                      duration: 2.5,
-                      repeat: Infinity,
-                      ease: "linear",
-                    }}
-                  />
-                  <div className="absolute inset-0 bg-navy-900/10 mix-blend-overlay" />
-                </div>
-
-                <div className="relative z-20 flex items-center justify-between border-b border-ink-700 bg-ink-800/60 px-3 py-1.5">
-                  <span className="font-mono text-[10px] text-paper-400">
-                    {d.tab}
-                  </span>
-                  <span className="font-mono text-[10px] text-paper-600 transition-colors group-hover:text-brass-400">
-                    open ↗
-                  </span>
-                </div>
-                <Image
-                  src={d.src}
-                  alt={d.alt}
-                  width={1400}
-                  height={900}
-                  className="relative z-0 h-auto w-full"
-                  sizes="(max-width: 1024px) 100vw, 50vw"
-                />
-              </motion.button>
-            </motion.div>
+              d={d}
+              index={i}
+              onOpen={() => setOpenImg({ src: d.src, alt: d.alt })}
+            />
           ))}
         </div>
 
