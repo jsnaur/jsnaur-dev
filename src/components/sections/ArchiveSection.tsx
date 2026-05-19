@@ -9,6 +9,7 @@ import { MonoLabel } from "@/components/ui/MonoLabel";
 import { Reveal } from "@/components/ui/Reveal";
 import { Lightbox } from "@/components/ui/Lightbox";
 import { TransparentMockup } from "@/components/ui/TransparentMockup";
+import { StackBadges } from "@/components/ui/StackBadges";
 
 export function ArchiveSection() {
   const [open, setOpen] = useState<{ src: string; alt: string } | null>(null);
@@ -43,22 +44,16 @@ export function ArchiveSection() {
               <div className="grid grid-cols-1 gap-10 lg:grid-cols-12 lg:gap-12">
                 <div className="lg:col-span-5">
                   <h3 className="font-display text-4xl tracking-tight text-paper-50">
-                    {campusee.name}
+                    <span style={{ color: "#818cf8" }}>Campu</span>
+                    <span style={{ color: "#fbbf24" }}>See</span>
                   </h3>
                   <p className="mt-3 text-paper-200">{campusee.tagline}</p>
                   <p className="mt-2 font-mono text-[11px] uppercase tracking-wider text-paper-600">
                     {campusee.role}
                   </p>
 
-                  <div className="mt-6 flex flex-wrap gap-1.5">
-                    {campusee.stack.map((t) => (
-                      <span
-                        key={t}
-                        className="rounded border border-ink-700 px-2 py-0.5 font-mono text-[10px] text-paper-400"
-                      >
-                        {t}
-                      </span>
-                    ))}
+                  <div className="mt-6">
+                    <StackBadges stack={campusee.stack} speed={20} />
                   </div>
 
                   <a
@@ -129,11 +124,11 @@ export function ArchiveSection() {
                   </p>
                 </div>
                 <span className="shrink-0 font-mono text-[10px] uppercase tracking-[0.22em] text-paper-600">
-                  3 projects · {managedTeams.artifacts.length} boards
+                  3 projects · {managedTeams.artifacts.length} exhibits
                 </span>
               </div>
 
-              <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
+              <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
                 {managedTeams.artifacts.map((artifact, i) => (
                   <motion.div
                     key={artifact.project}
@@ -195,7 +190,7 @@ export function ArchiveSection() {
               <div className="mt-8 border-t border-ink-700 pt-6">
                 <p className="font-mono text-[11px] text-paper-600">
                   ◆ PM boards capture sprint planning, task ownership, and delivery cadence across
-                  3 multi-person teams — GesturiX (4–6 devs), LYNK (4–6 devs), CampuSee
+                  3 multi-person teams — MediBridge · LYNK (4–6 devs each) · CampuSee
                 </p>
               </div>
             </div>
