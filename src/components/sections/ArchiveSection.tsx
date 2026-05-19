@@ -131,7 +131,7 @@ export function ArchiveSection() {
               <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
                 {managedTeams.artifacts.map((artifact, i) => (
                   <motion.div
-                    key={artifact.project}
+                    key={artifact.src}
                     initial={{ opacity: 0, y: 20 }}
                     whileInView={{ opacity: 1, y: 0 }}
                     viewport={{ once: true, margin: "-5%" }}
