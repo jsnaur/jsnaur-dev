@@ -72,6 +72,12 @@ html {
   scroll-behavior: smooth;
 }
 
+/* Offset anchor targets so they don't hide under the sticky TopNav */
+section[id],
+div[id] {
+  scroll-margin-top: 56px;
+}
+
 /* Column-rule grid background utility */
 .bg-columnrule {
   background-image:

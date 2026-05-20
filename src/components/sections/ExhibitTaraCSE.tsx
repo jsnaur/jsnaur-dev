@@ -18,7 +18,7 @@ import { Reveal } from "@/components/ui/Reveal";
 import { MonoLabel } from "@/components/ui/MonoLabel";
 import { Lightbox } from "@/components/ui/Lightbox";
 import { StackBadges } from "@/components/ui/StackBadges";
-import { GitHubButton } from "@/components/ui/GitHubButton";
+import { GitHubButton, LiveDemoButton } from "@/components/ui/GitHubButton";
 
 /* Auto-scrolling browser preview with manual takeover */
 function ScrollableLanding({ src, alt }: { src: string; alt: string }) {
@@ -69,16 +69,23 @@ function ScrollableLanding({ src, alt }: { src: string; alt: string }) {
   return (
     <>
       <BrowserFrame
-        url="taracse.app"
+        url="taracse.vercel.app"
+        href={taracse.deployed}
         className="relative"
         rightSlot={
-          <button
-            onClick={() => setOpen(true)}
-            className="rounded border border-ink-700 px-2 py-0.5 font-mono text-[10px] uppercase tracking-wider text-paper-400 hover:border-navy-300 hover:text-paper-50 transition-colors"
-            aria-label="View full mockup"
-          >
-            view full ↗
-          </button>
+          <div className="flex items-center gap-2">
+            <span className="relative flex h-1.5 w-1.5">
+              <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-verdict opacity-60" />
+              <span className="relative inline-flex h-1.5 w-1.5 rounded-full bg-verdict" />
+            </span>
+            <button
+              onClick={() => setOpen(true)}
+              className="rounded border border-ink-700 px-2 py-0.5 font-mono text-[10px] uppercase tracking-wider text-paper-400 hover:border-navy-300 hover:text-paper-50 transition-colors"
+              aria-label="View full mockup"
+            >
+              view full ↗
+            </button>
+          </div>
         }
       >
         <div
@@ -327,25 +334,33 @@ export function ExhibitTaraCSE() {
   return (
     <section
       id="exhibit-a"
-      className="relative overflow-hidden border-b border-ink-700 px-6 py-20 sm:px-10 sm:py-28 lg:px-32"
+      className="relative overflow-hidden border-b border-ink-700 px-6 py-20 sm:px-10 sm:py-28 lg:px-32 bg-gradient-to-b from-ink-950 via-ink-950 to-ink-900/40"
     >
       {/* Ambient background orbs */}
       <div aria-hidden className="pointer-events-none absolute right-0 top-0 h-[40rem] w-[40rem] rounded-full bg-navy-500/5 blur-3xl" />
       <div aria-hidden className="pointer-events-none absolute bottom-0 left-1/4 h-[30rem] w-[30rem] rounded-full bg-brass-400/4 blur-3xl" />
       <div className="mx-auto max-w-7xl">
         <Reveal>
-          <SectionHeading
-            num="02"
-            eyebrow="Exhibit A"
-            titleNode={
-              <>
-                <span style={{ color: "#6b8dd6" }}>Tara</span>
-                <span style={{ color: "#c9a96e" }}>CSE</span>
-                <span className="text-paper-50"> — the flagship case.</span>
-              </>
-            }
-            caption={`${taracse.tagline} · ${taracse.role} · solo build · ${taracse.period}`}
-          />
+          <div className="flex flex-wrap items-start justify-between gap-4">
+            <SectionHeading
+              num="02"
+              eyebrow="Exhibit A"
+              titleNode={
+                <>
+                  <span style={{ color: "#6b8dd6" }}>Tara</span>
+                  <span style={{ color: "#c9a96e" }}>CSE</span>
+                  <span className="text-paper-50"> — the flagship case.</span>
+                </>
+              }
+              caption={`${taracse.tagline} · ${taracse.role} · solo build · ${taracse.period}`}
+            />
+            <div className="flex flex-col items-start gap-3 sm:items-end">
+              <LiveDemoButton href={taracse.deployed} label="Live App" className="text-sm px-5 py-3" />
+              <span className="font-mono text-[9px] uppercase tracking-[0.22em] text-paper-600">
+                deployed on vercel
+              </span>
+            </div>
+          </div>
         </Reveal>
 
         {/* Movement 1 — scrollable landing preview */}
@@ -377,7 +392,10 @@ export function ExhibitTaraCSE() {
                   <div className="border-t border-ink-700 pt-4">
                     <StackBadges stack={taracse.stack} speed={22} />
                   </div>
-                  <GitHubButton href={taracse.github} />
+                  <div className="flex flex-col gap-2">
+                    <LiveDemoButton href={taracse.deployed} label="View Live App" className="w-full justify-center" />
+                    <GitHubButton href={taracse.github} className="w-full justify-center" />
+                  </div>
                 </div>
               </CaseCard>
             </div>

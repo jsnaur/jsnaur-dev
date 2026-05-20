@@ -196,7 +196,7 @@ export function TechTicker() {
       <motion.div
         className="flex items-center py-4"
         style={{ width: "max-content" }}
-        animate={{ x: ["0%", "-50%"] }}
+        animate={{ x: ["-50%", "0%"] }}
         transition={{
           duration: 30,
           ease: "linear",

@@ -1,3 +1,20 @@
+const GlobeIcon = () => (
+  <svg
+    viewBox="0 0 24 24"
+    fill="none"
+    stroke="currentColor"
+    strokeWidth="2"
+    strokeLinecap="round"
+    strokeLinejoin="round"
+    className="h-3.5 w-3.5 shrink-0"
+    aria-hidden
+  >
+    <circle cx="12" cy="12" r="10" />
+    <line x1="2" y1="12" x2="22" y2="12" />
+    <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z" />
+  </svg>
+);
+
 const GitHubIcon = () => (
   <svg
     viewBox="0 0 24 24"
@@ -14,6 +31,25 @@ type Props = {
   label?: string;
   className?: string;
 };
+
+export function LiveDemoButton({ href, label = "View Live App", className = "" }: Props) {
+  return (
+    <a
+      href={href}
+      target="_blank"
+      rel="noreferrer"
+      className={`group relative inline-flex items-center gap-2.5 rounded-md border border-verdict/50 bg-verdict/10 px-4 py-2.5 font-mono text-[11px] uppercase tracking-wider text-verdict transition-all duration-200 hover:border-verdict/80 hover:bg-verdict/20 hover:shadow-[0_0_22px_-4px_rgba(79,178,134,0.55)] ${className}`}
+    >
+      <span className="relative flex h-2 w-2 shrink-0">
+        <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-verdict opacity-60" />
+        <span className="relative inline-flex h-2 w-2 rounded-full bg-verdict" />
+      </span>
+      <GlobeIcon />
+      <span>{label}</span>
+      <span className="opacity-60 transition-opacity group-hover:opacity-100">↗</span>
+    </a>
+  );
+}
 
 export function GitHubButton({ href, label = "Repository", className = "" }: Props) {
   return (

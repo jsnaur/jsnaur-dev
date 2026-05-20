@@ -1,5 +1,5 @@
 import { DossierRail } from "@/components/layout/DossierRail";
-import { CaseHeader } from "@/components/layout/CaseHeader";
+import { TopNav } from "@/components/layout/TopNav";
 import { StatementHero } from "@/components/sections/StatementHero";
 import { ExhibitTaraCSE } from "@/components/sections/ExhibitTaraCSE";
 import { ExhibitDiptych } from "@/components/sections/ExhibitDiptych";
@@ -10,8 +10,8 @@ import { ClosingSection } from "@/components/sections/ClosingSection";
 export default function Home() {
   return (
     <main className="relative pb-16 lg:pb-0">
+      <TopNav />
       <DossierRail />
-      <CaseHeader />
       <StatementHero />
       <ExhibitTaraCSE />
       <ExhibitDiptych />

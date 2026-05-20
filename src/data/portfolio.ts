@@ -31,6 +31,7 @@ export const taracse = {
   role: "Personal ongoing project — Project Manager",
   period: "April 2026 — Present",
   github: "https://github.com/jsnaur/taracse",
+  deployed: "https://taracse.vercel.app/",
   highlights: [
     "Solo-architected a Next.js + Supabase platform with TypeScript end-to-end.",
     "Personally engineered a custom RAG pipeline using Gemini embeddings + pgvector similarity search.",
@@ -83,7 +84,7 @@ export const lynk = {
   tagline: "AI-integrated campus questing & social networking app.",
   stack: ["React Native", "Expo", "TypeScript", "Tailwind", "Supabase"],
   role: "Project Manager & Full-Stack Developer",
-  period: "Feb 2026 — May 2026",
+  period: "April 2026 — May 2026",
   github: "https://github.com/jsnaur/lynk",
   highlights: [
     "Engineered backend webhooks powering real-time AI content moderation.",
@@ -127,7 +128,7 @@ export const managedTeams = {
       src: "/projects/ManagedTeams/MediBridge1-PM.jpeg",
       alt: "MediBridge — Team Photo",
       role: "Project Manager",
-      period: "Sept 2025 — Dec 2025",
+      period: "June 2025 — July 2025",
       objectPosition: "center",
     },
     {
@@ -135,7 +136,7 @@ export const managedTeams = {
       src: "/projects/ManagedTeams/MediBridge2-PM.jpg",
       alt: "MediBridge — School Presentation",
       role: "Project Manager",
-      period: "Sept 2025 — Dec 2025",
+      period: "June 2025 — July 2025",
       objectPosition: "center",
     },
     {
@@ -151,7 +152,7 @@ export const managedTeams = {
       src: "/projects/ManagedTeams/LYNK-PM.jpg",
       alt: "LYNK — Project Management Board",
       role: "Project Manager",
-      period: "Feb 2026 — May 2026",
+      period: "April 2026 — May 2026",
       objectPosition: "bottom",
     },
   ],

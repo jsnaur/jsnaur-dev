@@ -1,8 +1,8 @@
 "use client";
 
 import Image from "next/image";
-import { useState } from "react";
-import { motion } from "framer-motion";
+import { useEffect, useRef, useState } from "react";
+import { AnimatePresence, motion, useInView } from "framer-motion";
 import { campusee, managedTeams } from "@/data/portfolio";
 import { SectionHeading } from "@/components/ui/SectionHeading";
 import { MonoLabel } from "@/components/ui/MonoLabel";
@@ -11,9 +11,130 @@ import { Lightbox } from "@/components/ui/Lightbox";
 import { TransparentMockup } from "@/components/ui/TransparentMockup";
 import { StackBadges } from "@/components/ui/StackBadges";
 import { GitHubButton } from "@/components/ui/GitHubButton";
+import { cn } from "@/lib/cn";
+
+/* Auto-sliding photo card for grouped PM artifacts (e.g. MediBridge x2) */
+function PMPhotoSlider({
+  images,
+  project,
+  role,
+  period,
+  onOpen,
+}: {
+  images: Array<{ src: string; alt: string; objectPosition: string }>;
+  project: string;
+  role: string;
+  period: string;
+  onOpen: (img: { src: string; alt: string }) => void;
+}) {
+  const [idx, setIdx] = useState(0);
+  const ref = useRef<HTMLDivElement>(null);
+  const inView = useInView(ref, { once: false, margin: "-20%" });
+
+  useEffect(() => {
+    if (!inView || images.length <= 1) return;
+    const t = setInterval(() => setIdx((i) => (i + 1) % images.length), 3500);
+    return () => clearInterval(t);
+  }, [inView, images.length]);
+
+  const cur = images[idx];
+
+  return (
+    <motion.div
+      ref={ref}
+      initial={{ opacity: 0, y: 20 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true, margin: "-5%" }}
+      transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
+    >
+      {/* Outer div — not a button so the dot <buttons> inside remain valid */}
+      <motion.div
+        role="group"
+        whileHover={{ y: -4, scale: 1.01 }}
+        transition={{ type: "spring", stiffness: 400, damping: 30 }}
+        className="group relative w-full cursor-pointer overflow-hidden rounded-lg border border-ink-700 bg-ink-900 transition-colors hover:border-brass-400/50"
+        onClick={() => onOpen(cur)}
+      >
+        {/* Dossier scanner line */}
+        <div className="pointer-events-none absolute inset-0 z-10 opacity-0 transition-opacity duration-300 group-hover:opacity-100">
+          <motion.div
+            className="h-[1px] w-full bg-brass-400/60 shadow-[0_0_8px_1px_rgba(201,169,110,0.4)]"
+            animate={{ y: ["0%", "5000%"] }}
+            transition={{ duration: 2.5, repeat: Infinity, ease: "linear" }}
+          />
+          <div className="absolute inset-0 bg-brass-400/5 mix-blend-overlay" />
+        </div>
+
+        {/* Tab bar with slide dots */}
+        <div className="relative z-20 flex items-center justify-between gap-2 border-b border-ink-700 bg-ink-800/60 px-3 py-1.5">
+          <span className="font-mono text-[10px] text-paper-400">{project}.pm</span>
+          {images.length > 1 && (
+            <div className="flex items-center gap-1.5">
+              {images.map((_, i) => (
+                <button
+                  key={i}
+                  type="button"
+                  onClick={(e) => { e.stopPropagation(); setIdx(i); }}
+                  aria-label={`View photo ${i + 1}`}
+                  className={cn(
+                    "h-[3px] rounded-full transition-all duration-300",
+                    i === idx ? "w-5 bg-brass-400" : "w-1.5 bg-ink-600 hover:bg-ink-500",
+                  )}
+                />
+              ))}
+            </div>
+          )}
+          <span className="font-mono text-[10px] text-paper-600 transition-colors group-hover:text-brass-400">
+            open ↗
+          </span>
+        </div>
+
+        {/* Sliding image */}
+        <div className="relative aspect-[4/3] overflow-hidden bg-ink-800">
+          <AnimatePresence mode="wait" initial={false}>
+            <motion.div
+              key={idx}
+              className="absolute inset-0"
+              initial={{ x: "100%", opacity: 0.7 }}
+              animate={{ x: 0, opacity: 1 }}
+              exit={{ x: "-100%", opacity: 0.7 }}
+              transition={{ duration: 0.42, ease: [0.22, 1, 0.36, 1] }}
+            >
+              <Image
+                src={cur.src}
+                alt={cur.alt}
+                fill
+                className="object-cover transition-transform duration-700 ease-out group-hover:scale-[1.03]"
+                style={{ objectPosition: cur.objectPosition }}
+                sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
+              />
+            </motion.div>
+          </AnimatePresence>
+        </div>
+
+        {/* Footer */}
+        <div className="relative z-20 border-t border-ink-700 px-3 py-2.5">
+          <p className="font-display text-base text-paper-50">{project}</p>
+          <div className="mt-1 flex items-center justify-between">
+            <span className="font-mono text-[10px] text-paper-600">{role}</span>
+            <span className="font-mono text-[10px] text-paper-600">{period}</span>
+          </div>
+        </div>
+      </motion.div>
+    </motion.div>
+  );
+}
 
 export function ArchiveSection() {
   const [open, setOpen] = useState<{ src: string; alt: string } | null>(null);
+
+  const medibridgeImages = managedTeams.artifacts
+    .filter((a) => a.project === "MediBridge")
+    .map((a) => ({ src: a.src, alt: a.alt, objectPosition: a.objectPosition }));
+
+  const otherArtifacts = managedTeams.artifacts.filter(
+    (a) => a.project !== "MediBridge",
+  );
 
   return (
     <section
@@ -97,7 +218,7 @@ export function ArchiveSection() {
 
         {/* Managed Teams — PM Artifacts */}
         <Reveal delay={0.15} className="mt-10">
-          <article className="relative">
+          <article id="managed-teams" className="relative">
             <div className="relative ml-6 inline-flex">
               <div className="rounded-t-md border border-b-0 border-ink-700 bg-ink-900 px-4 py-1.5">
                 <span className="font-mono text-[10px] uppercase tracking-[0.22em] text-paper-400">
@@ -118,18 +239,28 @@ export function ArchiveSection() {
                   </p>
                 </div>
                 <span className="shrink-0 font-mono text-[10px] uppercase tracking-[0.22em] text-paper-600">
-                  3 projects · {managedTeams.artifacts.length} exhibits
+                  3 projects · {1 + otherArtifacts.length} exhibits
                 </span>
               </div>
 
-              <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
-                {managedTeams.artifacts.map((artifact, i) => (
+              <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
+                {/* MediBridge — auto-sliding card */}
+                <PMPhotoSlider
+                  images={medibridgeImages}
+                  project="MediBridge"
+                  role={managedTeams.artifacts[0].role}
+                  period={managedTeams.artifacts[0].period}
+                  onOpen={setOpen}
+                />
+
+                {/* CampuSee + LYNK */}
+                {otherArtifacts.map((artifact, i) => (
                   <motion.div
                     key={artifact.src}
                     initial={{ opacity: 0, y: 20 }}
                     whileInView={{ opacity: 1, y: 0 }}
                     viewport={{ once: true, margin: "-5%" }}
-                    transition={{ duration: 0.6, delay: i * 0.1, ease: [0.22, 1, 0.36, 1] }}
+                    transition={{ duration: 0.6, delay: (i + 1) * 0.1, ease: [0.22, 1, 0.36, 1] }}
                   >
                     <motion.button
                       type="button"
@@ -139,7 +270,7 @@ export function ArchiveSection() {
                       className="group relative block w-full overflow-hidden rounded-lg border border-ink-700 bg-ink-900 text-left transition-colors hover:border-navy-400/70"
                     >
                       {/* Dossier scanner line */}
-                      <div className="absolute inset-0 z-10 pointer-events-none opacity-0 transition-opacity duration-300 group-hover:opacity-100">
+                      <div className="pointer-events-none absolute inset-0 z-10 opacity-0 transition-opacity duration-300 group-hover:opacity-100">
                         <motion.div
                           className="h-[1px] w-full bg-brass-400/60 shadow-[0_0_8px_1px_rgba(201,169,110,0.4)]"
                           animate={{ y: ["0%", "5000%"] }}
@@ -148,7 +279,6 @@ export function ArchiveSection() {
                         <div className="absolute inset-0 bg-brass-400/5 mix-blend-overlay" />
                       </div>
 
-                      {/* Tab bar */}
                       <div className="relative z-20 flex items-center justify-between border-b border-ink-700 bg-ink-800/60 px-3 py-1.5">
                         <span className="font-mono text-[10px] text-paper-400">
                           {artifact.project}.pm
