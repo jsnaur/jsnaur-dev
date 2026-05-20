@@ -1,5 +1,7 @@
 "use client";
 
+import { motion } from "framer-motion";
+
 /* Scrolling tech ticker strip with inline SVG icons and brand accent colors. */
 
 type Tech = {
@@ -175,8 +177,12 @@ function TickerItem({ tech }: { tech: Tech }) {
 }
 
 export function TechTicker() {
-  /* Triplicate for guaranteed seamless loop on any screen width */
-  const items = [...TECHS, ...TECHS, ...TECHS];
+  /*
+   * Duplicate the list — Framer Motion animates x from 0 → "-50%"
+   * (relative to the element's own width). With 2× content that's
+   * exactly one full copy, creating a seamless infinite left-to-right scroll.
+   */
+  const items = [...TECHS, ...TECHS];
 
   return (
     <div
@@ -184,15 +190,24 @@ export function TechTicker() {
       aria-hidden
     >
       {/* Fade edges */}
-      <div className="absolute inset-y-0 left-0 z-10 w-16 bg-gradient-to-r from-ink-950/80 to-transparent" />
-      <div className="absolute inset-y-0 right-0 z-10 w-16 bg-gradient-to-l from-ink-950/80 to-transparent" />
+      <div className="absolute inset-y-0 left-0 z-10 w-20 bg-gradient-to-r from-ink-950 to-transparent" />
+      <div className="absolute inset-y-0 right-0 z-10 w-20 bg-gradient-to-l from-ink-950 to-transparent" />
 
-      {/* ← use CSS class so the @keyframes in globals.css is reachable */}
-      <div className="anim-ticker flex w-max items-center py-3.5">
+      <motion.div
+        className="flex items-center py-4"
+        style={{ width: "max-content" }}
+        animate={{ x: ["0%", "-50%"] }}
+        transition={{
+          duration: 30,
+          ease: "linear",
+          repeat: Infinity,
+          repeatType: "loop",
+        }}
+      >
         {items.map((tech, i) => (
           <TickerItem key={`${tech.name}-${i}`} tech={tech} />
         ))}
-      </div>
+      </motion.div>
     </div>
   );
 }
