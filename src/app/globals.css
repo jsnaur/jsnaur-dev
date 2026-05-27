@@ -72,10 +72,10 @@ html {
   scroll-behavior: smooth;
 }
 
-/* Offset anchor targets so they don't hide under the sticky TopNav */
+/* Offset anchor targets so they don't hide under the sticky TopNav (h-16 = 64px) */
 section[id],
 div[id] {
-  scroll-margin-top: 56px;
+  scroll-margin-top: 5rem;
 }
 
 /* Column-rule grid background utility */
@@ -191,7 +191,7 @@ div[id] {
 }
 
 /* Sections offset so anchor jumps clear the header chrome */
-section[id] { scroll-margin-top: 2rem; }
+section[id] { scroll-margin-top: 5rem; }
 
 /* Mockup floating system — transparent-PNG phone mockups drift gently in place.
    Three offset rhythms so a stack of phones never breathes in sync. */
