@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import {
   motion,
   AnimatePresence,
@@ -8,7 +8,6 @@ import {
   useSpring,
 } from "framer-motion";
 import Link from "next/link";
-import { sections } from "@/data/portfolio";
 import { cn } from "@/lib/cn";
 
 const NAV_LINKS = [
@@ -22,6 +21,12 @@ export function TopNav() {
   const [scrolled, setScrolled] = useState(false);
   const [active, setActive] = useState<string>("");
   const [mobileOpen, setMobileOpen] = useState(false);
+
+  // While a click-driven smooth scroll is in flight, ignore the scroll-spy so
+  // the pill slides straight to the target instead of chasing sections it
+  // passes over on the way there.
+  const clickScrollRef = useRef(false);
+  const scrollRaf = useRef<number | null>(null);
 
   // Page scroll progress — drives the brass hairline at the bar's base.
   const { scrollYProgress } = useScroll();
@@ -38,6 +43,14 @@ export function TopNav() {
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
 
+  // Cancel any in-flight click-scroll animation on unmount.
+  useEffect(
+    () => () => {
+      if (scrollRaf.current) cancelAnimationFrame(scrollRaf.current);
+    },
+    [],
+  );
+
   // Lock body scroll while the mobile sheet is open.
   useEffect(() => {
     document.body.style.overflow = mobileOpen ? "hidden" : "";
@@ -47,24 +60,108 @@ export function TopNav() {
   }, [mobileOpen]);
 
   useEffect(() => {
-    const observers: IntersectionObserver[] = [];
-    const allTargets = [...sections.map((s) => s.id), "managed-teams"];
-    allTargets.forEach((id) => {
+    // Observe only the actual nav destinations (plus the CTA's #closing).
+    // We deliberately skip non-nav sections like #archive: it's a tall
+    // wrapper around #managed-teams, so it always intersects the band and
+    // would overwrite the Teams highlight under last-writer-wins.
+    const navIds = [...NAV_LINKS.map((l) => l.href.slice(1)), "closing"];
+    const visible = new Set<string>();
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        // A click is steering the scroll — let it own `active`.
+        if (clickScrollRef.current) return;
+        for (const entry of entries) {
+          if (entry.isIntersecting) visible.add(entry.target.id);
+          else visible.delete(entry.target.id);
+        }
+        // Among the sections currently in the band, the active one is the
+        // section whose top sits closest to the top of the viewport.
+        let topId = "";
+        let topY = Infinity;
+        for (const id of visible) {
+          const el = document.getElementById(id);
+          if (!el) continue;
+          const y = el.getBoundingClientRect().top;
+          if (Math.abs(y) < Math.abs(topY)) {
+            topY = y;
+            topId = id;
+          }
+        }
+        if (topId) setActive(topId);
+      },
+      { rootMargin: "-25% 0px -60% 0px", threshold: 0 },
+    );
+
+    navIds.forEach((id) => {
       const el = document.getElementById(id);
-      if (!el) return;
-      const obs = new IntersectionObserver(
-        ([entry]) => {
-          if (entry.isIntersecting) setActive(id);
-        },
-        { rootMargin: "-35% 0px -55% 0px", threshold: 0 },
-      );
-      obs.observe(el);
-      observers.push(obs);
+      if (el) observer.observe(el);
     });
-    return () => observers.forEach((o) => o.disconnect());
+    return () => observer.disconnect();
   }, []);
 
   const isActive = (href: string) => active === href.replace("#", "");
+
+  // Custom eased scroll — a fixed, consistent glide instead of the browser's
+  // native smooth scroll (which varies by browser and feels abrupt over long
+  // distances). Runs on rAF, cancels any prior animation, and releases the
+  // scroll-spy guard the moment it settles.
+  const HEADER_OFFSET = 80; // h-16 bar (64px) + breathing room
+  const animateScrollTo = useCallback((targetY: number, duration = 820) => {
+    if (scrollRaf.current) cancelAnimationFrame(scrollRaf.current);
+
+    const maxY = document.documentElement.scrollHeight - window.innerHeight;
+    const endY = Math.max(0, Math.min(targetY, maxY));
+    const startY = window.scrollY;
+    const distance = endY - startY;
+    if (Math.abs(distance) < 2) return;
+
+    const startTime = performance.now();
+    const easeInOutCubic = (t: number) =>
+      t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
+
+    clickScrollRef.current = true;
+    const step = (now: number) => {
+      const t = Math.min((now - startTime) / duration, 1);
+      window.scrollTo(0, startY + distance * easeInOutCubic(t));
+      if (t < 1) {
+        scrollRaf.current = requestAnimationFrame(step);
+      } else {
+        scrollRaf.current = null;
+        clickScrollRef.current = false; // hand control back to the scroll-spy
+      }
+    };
+    scrollRaf.current = requestAnimationFrame(step);
+  }, []);
+
+  // Drive nav clicks ourselves: slide the pill immediately, then glide the page
+  // to the target with a header offset (works for any element, not just the
+  // tagged sections). Jumps instantly if the user prefers reduced motion.
+  const handleNavClick = useCallback(
+    (e: React.MouseEvent<HTMLAnchorElement>, href: string) => {
+      const id = href.replace("#", "");
+      const el = document.getElementById(id);
+      if (!el) return; // let the browser handle unknown hashes
+      e.preventDefault();
+      setMobileOpen(false);
+
+      // Pill slides to the clicked item right away.
+      setActive(id);
+
+      const top =
+        el.getBoundingClientRect().top + window.scrollY - HEADER_OFFSET;
+      const reduceMotion = window.matchMedia(
+        "(prefers-reduced-motion: reduce)",
+      ).matches;
+
+      if (reduceMotion) {
+        window.scrollTo(0, top);
+        return;
+      }
+      animateScrollTo(top);
+    },
+    [animateScrollTo],
+  );
 
   return (
     <header
@@ -79,6 +176,7 @@ export function TopNav() {
         {/* Left — brand lockup */}
         <Link
           href="#statement"
+          onClick={(e) => handleNavClick(e, "#statement")}
           className="group flex shrink-0 items-center gap-3"
           aria-label="Back to top"
         >
@@ -107,6 +205,7 @@ export function TopNav() {
               <Link
                 key={item.href}
                 href={item.href}
+                onClick={(e) => handleNavClick(e, item.href)}
                 className={cn(
                   "group relative flex items-center gap-1.5 rounded-full px-3.5 py-1.5 font-mono text-[11px] uppercase tracking-[0.16em] transition-colors duration-200",
                   itemActive
@@ -118,7 +217,12 @@ export function TopNav() {
                   <motion.span
                     layoutId="nav-active-pill"
                     className="absolute inset-0 rounded-full border border-brass-400/40 bg-brass-400/10 shadow-[inset_0_0_12px_-6px_rgba(201,169,110,0.6)]"
-                    transition={{ type: "spring", stiffness: 420, damping: 34 }}
+                    transition={{
+                      type: "spring",
+                      stiffness: 260,
+                      damping: 30,
+                      mass: 0.9,
+                    }}
                   />
                 )}
                 <span
@@ -150,6 +254,7 @@ export function TopNav() {
 
           <Link
             href="#closing"
+            onClick={(e) => handleNavClick(e, "#closing")}
             className={cn(
               "group flex items-center gap-2 rounded-md border px-3.5 py-2 font-mono text-[10px] uppercase tracking-[0.16em] transition-all duration-200 sm:px-4",
               isActive("#closing")
@@ -228,7 +333,7 @@ export function TopNav() {
                   >
                     <Link
                       href={item.href}
-                      onClick={() => setMobileOpen(false)}
+                      onClick={(e) => handleNavClick(e, item.href)}
                       className={cn(
                         "flex items-center gap-3 rounded-lg px-4 py-3 font-mono text-[12px] uppercase tracking-[0.16em] transition-colors",
                         itemActive
@@ -262,7 +367,7 @@ export function TopNav() {
                 </a>
                 <Link
                   href="#closing"
-                  onClick={() => setMobileOpen(false)}
+                  onClick={(e) => handleNavClick(e, "#closing")}
                   className="flex items-center justify-center gap-2 rounded-lg border border-brass-400/40 bg-brass-400/10 px-4 py-3 font-mono text-[12px] uppercase tracking-[0.16em] text-brass-300 transition-colors hover:bg-brass-400/20"
                 >
                   <span className="relative flex h-1.5 w-1.5 shrink-0">
