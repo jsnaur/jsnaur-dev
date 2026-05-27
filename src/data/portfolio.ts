@@ -6,6 +6,10 @@ export const profile = {
   email: "tindoganjesnar@gmail.com",
   github: "https://github.com/jsnaur",
   linkedin: "https://www.linkedin.com/in/jesnartindogan",
+  instagram: "https://instagram.com/jnaur",
+  instagramHandle: "jnaur",
+  facebook: "https://web.facebook.com/jesnartindogan",
+  facebookHandle: "jesnartindogan",
   resumeHref: "/Tindogan_Resume.pdf",
   status: "Open to SWE internships & AI engineering roles",
   building: ["TaraCSE"],
@@ -31,7 +35,8 @@ export const taracse = {
   role: "Personal ongoing project — Project Manager",
   period: "April 2026 — Present",
   github: "https://github.com/jsnaur/taracse",
-  deployed: "https://taracse.vercel.app/",
+  deployed: "https://taracse.tech/",
+  domain: "taracse.tech",
   highlights: [
     "Solo-architected a Next.js + Supabase platform with TypeScript end-to-end.",
     "Personally engineered a custom RAG pipeline using Gemini embeddings + pgvector similarity search.",
@@ -39,11 +44,8 @@ export const taracse = {
     "Hardened AI endpoints with in-memory rate limiting (10 req/min/user) for stability.",
   ],
   desktop: {
+    // Web view intentionally features the landing page only.
     landing: "/projects/taracse/DesktopWeb/TaraCSE_LandingPageWeb.png",
-    dashboard: "/projects/taracse/DesktopWeb/TaraCSE_DashboardWeb.png",
-    practice: "/projects/taracse/DesktopWeb/TaraCSE_PracticeWeb.png",
-    mock: "/projects/taracse/DesktopWeb/TaraCSE_MockWeb.png",
-    analytics: "/projects/taracse/DesktopWeb/TaraCSE_AnalyticsWeb.png",
   },
   mobile: {
     landing: "/projects/taracse/MobileWeb/TaraCSE_LandPageMobile.png",

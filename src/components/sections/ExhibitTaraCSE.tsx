@@ -2,13 +2,7 @@
 
 import Image from "next/image";
 import { useEffect, useRef, useState } from "react";
-import {
-  motion,
-  useInView,
-  useMotionValue,
-  useSpring,
-  useTransform,
-} from "framer-motion";
+import { motion, useInView } from "framer-motion";
 import { taracse } from "@/data/portfolio";
 import { SectionHeading } from "@/components/ui/SectionHeading";
 import { CaseCard } from "@/components/ui/CaseCard";
@@ -69,7 +63,7 @@ function ScrollableLanding({ src, alt }: { src: string; alt: string }) {
   return (
     <>
       <BrowserFrame
-        url="taracse.vercel.app"
+        url={taracse.domain}
         href={taracse.deployed}
         className="relative"
         rightSlot={
@@ -214,122 +208,8 @@ function RAGDiagram() {
   );
 }
 
-/* Desktop screenshot card with mouse-tilt + scanner */
-function BentoCard({
-  d,
-  index,
-  onOpen,
-}: {
-  d: { src: string; alt: string; tab: string; span: string };
-  index: number;
-  onOpen: () => void;
-}) {
-  const cardRef = useRef<HTMLButtonElement>(null);
-  const mouseX = useMotionValue(0);
-  const mouseY = useMotionValue(0);
-  const springX = useSpring(mouseX, { stiffness: 180, damping: 26 });
-  const springY = useSpring(mouseY, { stiffness: 180, damping: 26 });
-  const rotateX = useTransform(springY, [-0.5, 0.5], [5, -5]);
-  const rotateY = useTransform(springX, [-0.5, 0.5], [-6, 6]);
-  const shineX = useTransform(springX, [-0.5, 0.5], ["20%", "80%"]);
-  const shineY = useTransform(springY, [-0.5, 0.5], ["20%", "80%"]);
-
-  const onMouseMove = (e: React.MouseEvent<HTMLButtonElement>) => {
-    const rect = e.currentTarget.getBoundingClientRect();
-    mouseX.set((e.clientX - rect.left) / rect.width - 0.5);
-    mouseY.set((e.clientY - rect.top) / rect.height - 0.5);
-  };
-  const onMouseLeave = () => { mouseX.set(0); mouseY.set(0); };
-
-  return (
-    <motion.div
-      initial={{ opacity: 0, clipPath: "inset(20% 0 100% 0)" }}
-      whileInView={{ opacity: 1, clipPath: "inset(0% 0 0% 0)" }}
-      viewport={{ once: true, margin: "-10%" }}
-      transition={{ duration: 0.85, delay: index * 0.12, ease: [0.22, 1, 0.36, 1] }}
-      className={`relative ${d.span}`}
-      style={{ perspective: "900px" }}
-    >
-      <motion.button
-        ref={cardRef}
-        onClick={onOpen}
-        onMouseMove={onMouseMove}
-        onMouseLeave={onMouseLeave}
-        style={{ rotateX, rotateY, transformStyle: "preserve-3d" }}
-        whileHover={{ scale: 1.015 }}
-        transition={{ type: "spring", stiffness: 320, damping: 28 }}
-        className="group relative block w-full overflow-hidden rounded-lg border border-ink-700 bg-ink-900 transition-colors hover:border-navy-400/70"
-      >
-        {/* Scanner sweep */}
-        <div className="absolute inset-0 z-10 pointer-events-none opacity-0 transition-opacity duration-300 group-hover:opacity-100">
-          <motion.div
-            className="h-[2px] w-full bg-gradient-to-r from-transparent via-navy-400/70 to-transparent shadow-[0_0_12px_2px_rgba(61,99,184,0.45)]"
-            animate={{ y: ["0%", "5000%"] }}
-            transition={{ duration: 2.2, repeat: Infinity, ease: "linear" }}
-          />
-        </div>
-
-        {/* Mouse-follow shine */}
-        <motion.div
-          className="pointer-events-none absolute inset-0 z-10 rounded-lg opacity-0 transition-opacity duration-300 group-hover:opacity-100"
-          style={{
-            background: `radial-gradient(circle at ${shineX} ${shineY}, rgba(107,141,214,0.10) 0%, transparent 55%)`,
-          }}
-        />
-
-        {/* Tab bar */}
-        <div className="relative z-20 flex items-center justify-between border-b border-ink-700 bg-ink-800/60 px-3 py-1.5">
-          <span className="font-mono text-[10px] text-paper-400">{d.tab}</span>
-          <motion.span
-            className="font-mono text-[10px] text-paper-600"
-            whileHover={{ color: "#c9a96e" }}
-          >
-            open ↗
-          </motion.span>
-        </div>
-
-        <Image
-          src={d.src}
-          alt={d.alt}
-          width={1400}
-          height={900}
-          className="relative z-0 h-auto w-full transition-transform duration-500 ease-out group-hover:scale-[1.02]"
-          sizes="(max-width: 1024px) 100vw, 50vw"
-        />
-      </motion.button>
-    </motion.div>
-  );
-}
-
 export function ExhibitTaraCSE() {
   const [openImg, setOpenImg] = useState<{ src: string; alt: string } | null>(null);
-
-  const desktops: { src: string; alt: string; tab: string; span: string }[] = [
-    {
-      src: taracse.desktop.dashboard,
-      alt: "TaraCSE dashboard",
-      tab: "/dashboard",
-      span: "lg:col-span-7",
-    },
-    {
-      src: taracse.desktop.practice,
-      alt: "TaraCSE practice",
-      tab: "/practice",
-      span: "lg:col-span-4",
-    },
-    {
-      src: taracse.desktop.mock,
-      alt: "TaraCSE mock exam",
-      tab: "/mock",
-      span: "lg:col-span-4",
-    },
-    {
-      src: taracse.desktop.analytics,
-      alt: "TaraCSE analytics",
-      tab: "/analytics",
-      span: "lg:col-span-7",
-    },
-  ];
 
   return (
     <section
@@ -356,9 +236,17 @@ export function ExhibitTaraCSE() {
             />
             <div className="flex flex-col items-start gap-3 sm:items-end">
               <LiveDemoButton href={taracse.deployed} label="Live App" className="text-sm px-5 py-3" />
-              <span className="font-mono text-[9px] uppercase tracking-[0.22em] text-paper-600">
-                deployed on vercel
-              </span>
+              <a
+                href={taracse.deployed}
+                target="_blank"
+                rel="noreferrer"
+                className="group inline-flex items-center gap-1.5 font-mono text-[10px] uppercase tracking-[0.22em] text-paper-600 transition-colors hover:text-brass-300"
+              >
+                live at{" "}
+                <span className="font-semibold text-brass-400 underline decoration-brass-400/40 underline-offset-4 transition-colors group-hover:decoration-brass-300">
+                  {taracse.domain}
+                </span>
+              </a>
             </div>
           </div>
         </Reveal>
@@ -402,20 +290,8 @@ export function ExhibitTaraCSE() {
           </div>
         </Reveal>
 
-        {/* Movement 2 — bento with unmask reveal, tilt, and scanner hover */}
-        <div className="mt-20 grid grid-cols-1 gap-5 lg:grid-cols-11 lg:gap-6">
-          {desktops.map((d, i) => (
-            <BentoCard
-              key={d.src}
-              d={d}
-              index={i}
-              onOpen={() => setOpenImg({ src: d.src, alt: d.alt })}
-            />
-          ))}
-        </div>
-
-        {/* Mobile stack — own row */}
-        <Reveal delay={0.15} className="mt-16">
+        {/* Mobile stack — full responsive walkthrough */}
+        <Reveal delay={0.15} className="mt-20">
           <div className="grid grid-cols-1 gap-10 lg:grid-cols-12 lg:gap-12">
             <div className="lg:col-span-7">
               <MonoLabel className="text-navy-300">
