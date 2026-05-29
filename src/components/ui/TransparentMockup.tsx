@@ -155,14 +155,6 @@ function Inner({
           }}
         />
 
-        {/* Scan-line sweep on hover */}
-        <div className="pointer-events-none absolute inset-0 overflow-hidden opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-          <motion.div
-            className="h-[1px] w-full bg-white/10 shadow-[0_0_6px_1px_rgba(255,255,255,0.08)]"
-            animate={{ y: ["0%", "5000%"] }}
-            transition={{ duration: 3, repeat: Infinity, ease: "linear" }}
-          />
-        </div>
       </motion.div>
     </motion.div>
   );

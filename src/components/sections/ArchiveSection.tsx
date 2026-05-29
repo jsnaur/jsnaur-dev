@@ -55,16 +55,6 @@ function PMPhotoSlider({
         className="group relative w-full cursor-pointer overflow-hidden rounded-lg border border-ink-700 bg-ink-900 transition-colors hover:border-brass-400/50"
         onClick={() => onOpen(cur)}
       >
-        {/* Dossier scanner line */}
-        <div className="pointer-events-none absolute inset-0 z-10 opacity-0 transition-opacity duration-300 group-hover:opacity-100">
-          <motion.div
-            className="h-[1px] w-full bg-brass-400/60 shadow-[0_0_8px_1px_rgba(201,169,110,0.4)]"
-            animate={{ y: ["0%", "5000%"] }}
-            transition={{ duration: 2.5, repeat: Infinity, ease: "linear" }}
-          />
-          <div className="absolute inset-0 bg-brass-400/5 mix-blend-overlay" />
-        </div>
-
         {/* Tab bar with slide dots */}
         <div className="relative z-20 flex items-center justify-between gap-2 border-b border-ink-700 bg-ink-800/60 px-3 py-1.5">
           <span className="font-mono text-[10px] text-paper-400">{project}.pm</span>
@@ -110,6 +100,17 @@ function PMPhotoSlider({
               />
             </motion.div>
           </AnimatePresence>
+
+          {/* Scanner — sweeps the photo on card hover */}
+          <div className="pointer-events-none absolute inset-0 z-10 overflow-hidden opacity-0 transition-opacity duration-300 group-hover:opacity-100">
+            <motion.div
+              className="absolute inset-x-0 h-[1px] bg-brass-400/70 shadow-[0_0_10px_1px_rgba(201,169,110,0.55)]"
+              initial={{ top: "0%" }}
+              animate={{ top: "100%" }}
+              transition={{ duration: 2.2, repeat: Infinity, ease: "linear" }}
+            />
+            <div className="absolute inset-0 bg-brass-400/5 mix-blend-overlay" />
+          </div>
         </div>
 
         {/* Footer */}
@@ -269,16 +270,6 @@ export function ArchiveSection() {
                       transition={{ type: "spring", stiffness: 400, damping: 30 }}
                       className="group relative block w-full overflow-hidden rounded-lg border border-ink-700 bg-ink-900 text-left transition-colors hover:border-navy-400/70"
                     >
-                      {/* Dossier scanner line */}
-                      <div className="pointer-events-none absolute inset-0 z-10 opacity-0 transition-opacity duration-300 group-hover:opacity-100">
-                        <motion.div
-                          className="h-[1px] w-full bg-brass-400/60 shadow-[0_0_8px_1px_rgba(201,169,110,0.4)]"
-                          animate={{ y: ["0%", "5000%"] }}
-                          transition={{ duration: 2.5, repeat: Infinity, ease: "linear" }}
-                        />
-                        <div className="absolute inset-0 bg-brass-400/5 mix-blend-overlay" />
-                      </div>
-
                       <div className="relative z-20 flex items-center justify-between border-b border-ink-700 bg-ink-800/60 px-3 py-1.5">
                         <span className="font-mono text-[10px] text-paper-400">
                           {artifact.project}.pm
@@ -297,6 +288,17 @@ export function ArchiveSection() {
                           style={{ objectPosition: artifact.objectPosition }}
                           sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
                         />
+
+                        {/* Scanner — sweeps the photo on card hover */}
+                        <div className="pointer-events-none absolute inset-0 z-10 overflow-hidden opacity-0 transition-opacity duration-300 group-hover:opacity-100">
+                          <motion.div
+                            className="absolute inset-x-0 h-[1px] bg-brass-400/70 shadow-[0_0_10px_1px_rgba(201,169,110,0.55)]"
+                            initial={{ top: "0%" }}
+                            animate={{ top: "100%" }}
+                            transition={{ duration: 2.2, repeat: Infinity, ease: "linear" }}
+                          />
+                          <div className="absolute inset-0 bg-brass-400/5 mix-blend-overlay" />
+                        </div>
                       </div>
 
                       <div className="relative z-20 border-t border-ink-700 px-3 py-2.5">

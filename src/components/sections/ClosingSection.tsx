@@ -168,7 +168,7 @@ export function ClosingSection() {
       <div className="relative mx-auto flex max-w-4xl flex-col items-center text-center">
         <Reveal>
           <SectionHeading
-            num="06"
+            num="07"
             eyebrow="Closing Statement"
             title=""
             align="center"

@@ -15,6 +15,7 @@ const NAV_LINKS = [
   { num: "02", label: "Projects", href: "#exhibits-bc" },
   { num: "03", label: "Teams", href: "#managed-teams" },
   { num: "04", label: "Process", href: "#methodology" },
+  { num: "05", label: "Events", href: "#events" },
 ] as const;
 
 export function TopNav() {

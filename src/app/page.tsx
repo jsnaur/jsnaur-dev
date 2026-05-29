@@ -5,6 +5,7 @@ import { ExhibitTaraCSE } from "@/components/sections/ExhibitTaraCSE";
 import { ExhibitDiptych } from "@/components/sections/ExhibitDiptych";
 import { ArchiveSection } from "@/components/sections/ArchiveSection";
 import { MethodologySection } from "@/components/sections/MethodologySection";
+import { EventsSection } from "@/components/sections/EventsSection";
 import { ClosingSection } from "@/components/sections/ClosingSection";
 
 export default function Home() {
@@ -17,6 +18,7 @@ export default function Home() {
       <ExhibitDiptych />
       <ArchiveSection />
       <MethodologySection />
+      <EventsSection />
       <ClosingSection />
     </main>
   );
