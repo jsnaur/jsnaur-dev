@@ -1,6 +1,8 @@
 "use client";
 
 import Image from "next/image";
+import { useEffect, useState } from "react";
+import { AnimatePresence, motion } from "framer-motion";
 import { profile } from "@/data/portfolio";
 import { MonoLabel } from "@/components/ui/MonoLabel";
 import { MagneticButton } from "@/components/ui/MagneticButton";
@@ -11,6 +13,15 @@ const headlineB = ["Preparing for the", "[justice] system tomorrow."];
 
 
 export function StatementHero() {
+  const [hovered, setHovered] = useState(false);
+  // On first paint, sweep the portrait twice (2 × 2.2s loop) — establishes the
+  // dossier-scan motif before the visitor even reaches for the mouse.
+  const [initialPlay, setInitialPlay] = useState(true);
+  useEffect(() => {
+    const t = setTimeout(() => setInitialPlay(false), 4400);
+    return () => clearTimeout(t);
+  }, []);
+  const scanning = hovered || initialPlay;
   return (
     <section
       id="statement"
@@ -140,7 +151,11 @@ export function StatementHero() {
             className="anim-fade-up relative mx-auto max-w-md lg:ml-auto"
             style={{ animationDelay: "0.3s" }}
           >
-            <div className="corner-tick group relative overflow-hidden rounded-md border border-ink-700 bg-ink-900">
+            <div
+              onMouseEnter={() => setHovered(true)}
+              onMouseLeave={() => setHovered(false)}
+              className="corner-tick group relative overflow-hidden rounded-md border border-ink-700 bg-ink-900"
+            >
               {/* IDENTIFICATION label */}
               <div className="absolute left-3 top-3 z-20 rounded-sm border border-ink-700 bg-ink-950/90 px-2 py-1">
                 <span className="font-mono text-[9px] uppercase tracking-[0.22em] text-paper-400">
@@ -181,6 +196,28 @@ export function StatementHero() {
                 <div className="anim-scan-loop absolute inset-x-0 top-0 h-px bg-brass-400/60 shadow-[0_0_8px_2px_rgba(201,169,110,0.4)]" />
               </div>
 
+              {/* Hover scanner — sweeps full height of the portrait on hover */}
+              <AnimatePresence>
+                {scanning && (
+                  <motion.div
+                    key="hover-scanner"
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    exit={{ opacity: 0 }}
+                    transition={{ duration: 0.2 }}
+                    className="pointer-events-none absolute inset-0 z-10 overflow-hidden"
+                  >
+                    <motion.div
+                      className="absolute inset-x-0 h-[1px] bg-brass-400/80 shadow-[0_0_12px_2px_rgba(201,169,110,0.55)]"
+                      initial={{ top: "0%" }}
+                      animate={{ top: "100%" }}
+                      transition={{ duration: 2.2, repeat: Infinity, ease: "linear" }}
+                    />
+                    <div className="absolute inset-0 bg-brass-400/5 mix-blend-overlay" />
+                  </motion.div>
+                )}
+              </AnimatePresence>
+
               {/* Targeting reticle corners */}
               <div className="pointer-events-none absolute inset-2 z-10 opacity-50">
                 <span className="absolute left-0 top-0 h-3 w-3 border-l border-t border-brass-400/70" />
@@ -207,7 +244,7 @@ export function StatementHero() {
                   ONLINE — {profile.location}
                 </p>
                 <p>◆ {profile.status}</p>
-                <p>§ Building: {profile.building.join(", ")}</p>
+                <p>§ Maintaining: {profile.building.join(", ")}</p>
               </div>
             </div>
           </div>
